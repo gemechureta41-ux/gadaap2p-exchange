@@ -8,75 +8,56 @@ if (!token) {
 
 const bot = new TelegramBot(token, { polling: true });
 
+// Registered Users Storage
 const registeredUsers = new Map(); // email -> { telegramId, registeredAt }
 const otpStore = new Map(); // email -> otpCode
 
-console.log('🤖 @gadaap2p_bot started successfully in English...');
+console.log('🤖 @gadaap2p_bot is live and responsive...');
 
 // 1. Command /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
-  const firstName = msg.from.first_name || 'User';
+  const firstName = msg.from && msg.from.first_name ? msg.from.first_name : 'User';
 
   const text = 
     `👋 *Welcome, \${firstName}!*\n\n` +
-    `This is the official **GadaaP2P Exchange** Bot.\n\n` +
-    `📌 *Registration Step:*\n` +
-    `To register on the GadaaP2P website, please send your **Email address** in this chat first.\n\n` +
+    `This is the official **GadaaP2P Exchange Bot**.\n\n` +
+    `📌 *Registration Requirement:*\n` +
+    `Please type and send your **Email Address** in this chat to enable web registration.\n\n` +
     `*Example:* \`example@gmail.com\``;
 
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown' });
 });
 
-// 2. Email Verification via Message
+// 2. Email Registration Handler with Instant Bot Reply
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
   const text = msg.text ? msg.text.trim() : '';
 
+  if (!text || text.startsWith('/')) return;
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+\$/;
   if (emailRegex.test(text)) {
     const email = text.toLowerCase();
+    
+    // Save email to Bot memory
     registeredUsers.set(email, { telegramId: chatId, registeredAt: new Date() });
 
-    bot.sendMessage(
-      chatId,
-      `✅ *Email Registered Successfully!*\n\n` +
-      `Email: \`\${email}\` \n` +
-      `Telegram ID: \`\${chatId}\` \n\n` +
-      `Now you can return to the GadaaP2P website and sign up using this email!`,
-      { parse_mode: 'Markdown' }
-    );
+    const confirmationMsg = 
+      `🎉 *Registration Successful!*\n\n` +
+      `✅ *Email:* \`\${email}\`\n` +
+      `🆔 *Telegram ID:* \`\${chatId}\`\n\n` +
+      `Your email has been successfully saved on GadaaP2P! You can now proceed to login on the website.`;
+
+    bot.sendMessage(chatId, confirmationMsg, { parse_mode: 'Markdown' });
+  } else {
+    bot.sendMessage(chatId, `⚠️ *Invalid Email Format!* Please enter a valid email address (e.g. name@gmail.com).`, { parse_mode: 'Markdown' });
   }
 });
 
-// Helper: Send OTP via Bot
-async function sendTelegramOTP(email, otpCode) {
-  const userData = registeredUsers.get(email.toLowerCase());
-  if (!userData) {
-    return { success: false, message: 'This email is not registered on the bot yet!' };
-  }
-
-  try {
-    const message = 
-      `🔐 *GadaaP2P Security Code*\n\n` +
-      `Your OTP Verification Code is: *${otpCode}*\n\n` +
-      `This code expires in 5 minutes. Do not share it with anyone!`;
-
-    await bot.sendMessage(userData.telegramId, message, { parse_mode: 'Markdown' });
-    otpStore.set(email.toLowerCase(), otpCode);
-    return { success: true };
-  } catch (err) {
-    return { success: false, message: err.message };
-  }
-}
-
+// Helper: Check Email
 function isEmailRegisteredOnBot(email) {
   return registeredUsers.has(email.toLowerCase());
 }
 
-function verifyOTP(email, code) {
-  const storedCode = otpStore.get(email.toLowerCase());
-  return storedCode === code;
-}
-
-module.exports = { bot, sendTelegramOTP, isEmailRegisteredOnBot, verifyOTP };
+module.exports = { bot, isEmailRegisteredOnBot };
