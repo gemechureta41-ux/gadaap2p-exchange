@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GadaaP2P | Pro Mobile & Web P2P Exchange</title>
+    <title>GadaaP2P | Crypto P2P Exchange</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -23,12 +23,11 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-brandDark text-gray-100 font-sans min-h-screen flex flex-col justify-between select-none pb-16 md:pb-0">
+<body class="bg-brandDark text-gray-100 font-sans min-h-screen flex flex-col justify-between pb-16 md:pb-0">
 
-    <!-- Top Navigation Header (Responsive PC & Mobile) -->
+    <!-- Header Navigation -->
     <header class="bg-brandCard border-b border-brandBorder sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14 md:h-16">
-            <!-- Brand Logo -->
             <div class="flex items-center space-x-2.5">
                 <div class="bg-brandGold text-black font-black text-lg md:text-xl px-2.5 py-0.5 rounded-lg shadow-sm">G</div>
                 <span class="text-lg md:text-xl font-bold tracking-wide">Gadaa<span class="text-brandGold">P2P</span></span>
@@ -46,12 +45,14 @@
             </div>
 
             <!-- Logged In Actions -->
-            <div id="loggedInNav" class="hidden flex items-center space-x-2 md:space-x-4">
+            <div id="loggedInNav" class="hidden flex items-center space-x-2 md:space-x-3">
+                <button id="adminPortalBtn" onclick="toggleAdminView()" class="hidden bg-amber-500/20 text-amber-400 border border-amber-500/40 font-bold text-xs px-3 py-1.5 rounded-lg transition">
+                    🔑 Admin Panel
+                </button>
                 <span id="kycBadge" class="text-[10px] md:text-xs px-2.5 py-1 rounded-full font-bold"></span>
                 <span id="userBadge" class="hidden sm:inline-block text-xs bg-brandAccent text-gray-300 px-3 py-1 rounded-full border border-gray-700 font-mono"></span>
-                <button onclick="openKycModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition flex items-center space-x-1">
-                    <i class="fa-solid fa-id-card"></i>
-                    <span class="hidden md:inline">Identity Verification (KYC)</span>
+                <button onclick="openKycModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition">
+                    KYC
                 </button>
                 <button onclick="handleLogout()" class="bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600 hover:text-white font-semibold text-xs px-2.5 py-1.5 rounded-lg transition">
                     <i class="fa-solid fa-right-from-bracket"></i>
@@ -60,12 +61,8 @@
         </div>
     </header>
 
-    <!-- LANDING PAGE (Logged Out view for Mobile & PC) -->
+    <!-- LANDING PAGE -->
     <section id="landingPage" class="max-w-4xl mx-auto px-4 text-center my-auto py-12 md:py-20 space-y-6">
-        <div class="inline-flex items-center space-x-2 bg-brandGold/10 border border-brandGold/30 text-brandGold text-xs font-semibold px-4 py-1.5 rounded-full">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span>Real-Time Telegram 2FA Protected</span>
-        </div>
         <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white leading-tight">
             Crypto P2P Market for <span class="text-brandGold">Android & Web</span>
         </h1>
@@ -74,44 +71,18 @@
         </p>
         
         <div class="flex flex-col sm:flex-row justify-center items-center gap-3 pt-2">
-            <a href="https://t.me/gadaap2p_bot?start=register" target="_blank" class="w-full sm:w-auto bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg active:scale-95 transition">
+            <a href="https://t.me/gadaap2p_bot?start=register" target="_blank" class="w-full sm:w-auto bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg">
                 <i class="fa-brands fa-telegram text-xl"></i>
                 <span>Start @gadaap2p_bot</span>
             </a>
-            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-brandGold hover:bg-yellow-400 text-black font-bold px-8 py-3.5 rounded-xl shadow-lg active:scale-95 transition">
+            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-brandGold hover:bg-yellow-400 text-black font-bold px-8 py-3.5 rounded-xl shadow-lg">
                 Register on Web
             </button>
         </div>
     </section>
 
-    <!-- BINANCE PRO DASHBOARD (Logged In View - Mobile & PC Responsive) -->
+    <!-- USER DASHBOARD -->
     <main id="protectedDashboard" class="hidden max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
-        
-        <!-- Quick Stats Cards (Binance Mobile Style) -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div class="bg-brandCard border border-brandBorder rounded-xl p-3.5 shadow-sm">
-                <span class="text-[11px] text-gray-400 block font-medium">Market Base Rate</span>
-                <span class="text-base md:text-lg font-black text-brandGold">1 USDT = 190 ETB</span>
-            </div>
-            <div class="bg-brandCard border border-brandBorder rounded-xl p-3.5 shadow-sm">
-                <span class="text-[11px] text-gray-400 block font-medium">Security Level</span>
-                <span class="text-xs md:text-sm font-bold text-emerald-400 flex items-center mt-1">
-                    <i class="fa-solid fa-shield-check mr-1"></i> Telegram 2FA
-                </span>
-            </div>
-            <div class="bg-brandCard border border-brandBorder rounded-xl p-3.5 shadow-sm">
-                <span class="text-[11px] text-gray-400 block font-medium">Escrow Protection</span>
-                <span class="text-xs md:text-sm font-bold text-sky-400 flex items-center mt-1">
-                    <i class="fa-solid fa-lock mr-1"></i> Active Lock
-                </span>
-            </div>
-            <div class="bg-brandCard border border-brandBorder rounded-xl p-3.5 shadow-sm">
-                <span class="text-[11px] text-gray-400 block font-medium">Trading Fee</span>
-                <span class="text-xs md:text-sm font-bold text-white mt-1 block">0.00% Zero Fee</span>
-            </div>
-        </div>
-
-        <!-- Main Orderbook Card -->
         <div class="bg-brandCard border border-brandBorder rounded-xl p-4 sm:p-6 shadow-xl">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-brandBorder">
                 <div>
@@ -121,14 +92,12 @@
                     </h2>
                     <p class="text-xs text-gray-400 mt-0.5">Verified P2P Orderbook (Minimum rate 190 ETB/USDT)</p>
                 </div>
-                <button onclick="openCreateOrderModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs sm:text-sm transition shadow active:scale-95">
+                <button onclick="openCreateOrderModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs sm:text-sm transition">
                     + Post New Ad / Order
                 </button>
             </div>
 
-            <!-- Responsive Table/Cards Container -->
             <div class="mt-4">
-                <!-- Desktop Table View -->
                 <div class="hidden md:block overflow-x-auto">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-brandDark text-gray-400 text-xs uppercase border-b border-brandBorder">
@@ -143,35 +112,27 @@
                         <tbody id="ordersTableBody" class="divide-y divide-brandBorder"></tbody>
                     </table>
                 </div>
-
-                <!-- Mobile Binance Card View (For Android & iPhones) -->
-                <div id="mobileOrdersContainer" class="md:hidden space-y-3">
-                    <!-- Dynamic Mobile Cards Render Here -->
-                </div>
+                <div id="mobileOrdersContainer" class="md:hidden space-y-3"></div>
             </div>
         </div>
-
     </main>
 
-    <!-- MOBILE BOTTOM NAVIGATION BAR (Binance Mobile App Style) -->
-    <div id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-brandCard border-t border-brandBorder z-40 flex justify-around items-center h-14 text-[10px]">
-        <button onclick="checkAuthView()" class="flex flex-col items-center text-brandGold font-medium">
-            <i class="fa-solid fa-house text-base mb-0.5"></i>
-            <span>P2P Home</span>
-        </button>
-        <button onclick="openCreateOrderModal()" class="flex flex-col items-center text-gray-400 hover:text-white">
-            <i class="fa-solid fa-circle-plus text-base mb-0.5 text-emerald-400"></i>
-            <span>Post Ad</span>
-        </button>
-        <button onclick="openKycModal()" class="flex flex-col items-center text-gray-400 hover:text-white">
-            <i class="fa-solid fa-id-card text-base mb-0.5 text-sky-400"></i>
-            <span>KYC Verification</span>
-        </button>
-        <button onclick="handleLogout()" class="flex flex-col items-center text-gray-400 hover:text-red-400">
-            <i class="fa-solid fa-user text-base mb-0.5"></i>
-            <span>Account</span>
-        </button>
-    </div>
+    <!-- EXCLUSIVE SUPER ADMIN DASHBOARD (gemechureta387@gmail.com ONLY) -->
+    <main id="superAdminDashboard" class="hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <div class="bg-brandCard border border-amber-500/40 rounded-xl p-6 shadow-2xl">
+            <div class="flex justify-between items-center pb-4 border-b border-gray-800 mb-6">
+                <h2 class="text-xl font-bold text-amber-400 flex items-center space-x-2">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Super Admin KYC Inspection Panel (gemechureta387@gmail.com)</span>
+                </h2>
+                <button onclick="loadPendingKycSubmissions()" class="bg-amber-500/20 text-amber-400 font-bold px-3 py-1.5 rounded-lg text-xs border border-amber-500/30">
+                    Refresh List
+                </button>
+            </div>
+
+            <div id="pendingKycList" class="space-y-6"></div>
+        </div>
+    </main>
 
     <!-- 2-STEP OTP AUTH MODAL -->
     <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -210,7 +171,7 @@
         </div>
     </div>
 
-    <!-- BINANCE STYLE KYC MODAL -->
+    <!-- KYC MODAL -->
     <div id="kycModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brandCard border border-brandBorder w-full max-w-lg rounded-2xl p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeKycModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -314,15 +275,22 @@
     <script>
         let currentUser = localStorage.getItem('gadaaUser');
         let currentKycStatus = 'UNVERIFIED';
+        const SUPER_ADMIN_EMAIL = 'gemechureta387@gmail.com';
 
         async function checkAuthView() {
             if (currentUser) {
                 document.getElementById('landingPage').classList.add('hidden');
                 document.getElementById('protectedDashboard').classList.remove('hidden');
-                document.getElementById('mobileBottomNav').classList.remove('hidden');
                 document.getElementById('loggedOutNav').classList.add('hidden');
                 document.getElementById('loggedInNav').classList.remove('hidden');
                 document.getElementById('userBadge').innerText = currentUser;
+
+                // Show Secret Admin Button ONLY for gemechureta387@gmail.com
+                if (currentUser.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
+                    document.getElementById('adminPortalBtn').classList.remove('hidden');
+                } else {
+                    document.getElementById('adminPortalBtn').classList.add('hidden');
+                }
 
                 const res = await fetch(`/api/kyc/status?email=${encodeURIComponent(currentUser)}`);
                 const data = await res.json();
@@ -344,10 +312,94 @@
             } else {
                 document.getElementById('landingPage').classList.remove('hidden');
                 document.getElementById('protectedDashboard').classList.add('hidden');
-                document.getElementById('mobileBottomNav').classList.add('hidden');
+                document.getElementById('superAdminDashboard').classList.add('hidden');
                 document.getElementById('loggedOutNav').classList.remove('hidden');
                 document.getElementById('loggedInNav').classList.add('hidden');
             }
+        }
+
+        function toggleAdminView() {
+            const adminDash = document.getElementById('superAdminDashboard');
+            const userDash = document.getElementById('protectedDashboard');
+
+            if (adminDash.classList.contains('hidden')) {
+                adminDash.classList.remove('hidden');
+                userDash.classList.add('hidden');
+                loadPendingKycSubmissions();
+            } else {
+                adminDash.classList.add('hidden');
+                userDash.classList.remove('hidden');
+            }
+        }
+
+        async function loadPendingKycSubmissions() {
+            const res = await fetch('/api/admin/pending-kyc', {
+                headers: { 
+                    'adminKey': 'GadaaFounder2026',
+                    'userEmail': currentUser 
+                }
+            });
+
+            const data = await res.json();
+            const list = document.getElementById('pendingKycList');
+            list.innerHTML = '';
+
+            if (data.success && data.pendingKyc.length > 0) {
+                data.pendingKyc.forEach(k => {
+                    list.innerHTML += `
+                        <div class="bg-brandDark border border-gray-700 rounded-xl p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h3 class="font-bold text-white text-base">${k.fullName}</h3>
+                                <p class="text-xs text-sky-400 font-mono">${k.userEmail}</p>
+                                <p class="text-xs text-gray-400 mt-1">Location: ${k.city}, ${k.country}</p>
+                                <p class="text-xs text-gray-400">${k.idType}: <span class="text-white font-bold">${k.idNumber}</span></p>
+
+                                <div class="mt-4 flex space-x-3">
+                                    <button onclick="processKycDecision('${k.userEmail}', 'APPROVE')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs">
+                                        Approve & Verify User
+                                    </button>
+                                    <button onclick="processKycDecision('${k.userEmail}', 'REJECT')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-lg text-xs">
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 block mb-1">Uploaded ID Card</span>
+                                    <a href="${k.idFrontImg}" target="_blank">
+                                        <img src="${k.idFrontImg}" class="w-full h-32 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition">
+                                    </a>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-gray-400 block mb-1">Live Selfie Photo</span>
+                                    <a href="${k.selfieImg}" target="_blank">
+                                        <img src="${k.selfieImg}" class="w-full h-32 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                list.innerHTML = `<p class="text-center text-gray-500 py-8 text-xs">No pending KYC verification requests available.</p>`;
+            }
+        }
+
+        async function processKycDecision(targetEmail, action) {
+            const res = await fetch('/api/admin/verify-kyc-action', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'adminKey': 'GadaaFounder2026',
+                    'userEmail': currentUser
+                },
+                body: JSON.stringify({ targetEmail, action })
+            });
+
+            const data = await res.json();
+            alert(data.message);
+            loadPendingKycSubmissions();
         }
 
         function openAuthModal() { 
@@ -362,7 +414,7 @@
         function closeKycModal() { document.getElementById('kycModal').classList.add('hidden'); }
         function openCreateOrderModal() { 
             if (currentKycStatus !== 'VERIFIED') {
-                alert('KYC Required: Complete Identity Verification before posting P2P orders!');
+                alert('KYC Required: Your ID and Live Selfie must be approved by Super Admin before posting orders!');
                 openKycModal();
                 return;
             }
@@ -474,7 +526,6 @@
 
             if (data.success && data.orders.length > 0) {
                 data.orders.forEach(ord => {
-                    // Desktop Row
                     tbody.innerHTML += `
                         <tr class="hover:bg-brandAccent/50 transition">
                             <td class="py-4 px-4 font-bold text-white">${ord.merchantName} (${ord.merchantEmail})</td>
@@ -487,7 +538,6 @@
                         </tr>
                     `;
 
-                    // Mobile App Style Card
                     mobileContainer.innerHTML += `
                         <div class="bg-brandDark border border-brandBorder p-3.5 rounded-xl space-y-2">
                             <div class="flex justify-between items-center">
@@ -511,8 +561,8 @@
                     `;
                 });
             } else {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">No active real orders available. Post the first ad!</td></tr>`;
-                mobileContainer.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs">No active real orders available. Post the first ad!</div>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">No active real orders available. Complete KYC and post the first ad!</td></tr>`;
+                mobileContainer.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs">No active real orders available. Complete KYC and post the first ad!</div>`;
             }
         }
 
