@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GadaaP2P | Secure Multi-Chain P2P Exchange</title>
+    <title>GadaaP2P | Secure Real P2P Exchange</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,7 +24,7 @@
 </head>
 <body class="bg-brandDark text-gray-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Top Navigation -->
+    <!-- Top Navigation Bar -->
     <header class="bg-brandCard border-b border-gray-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
             <div class="flex items-center space-x-3">
@@ -32,54 +32,63 @@
                 <span class="text-xl font-bold tracking-wide">Gadaa<span class="text-brandGold">P2P</span></span>
             </div>
 
-            <nav class="hidden md:flex space-x-8 font-medium">
-                <a href="#" class="text-brandGold hover:text-yellow-400">P2P Express</a>
-                <a href="#withdrawSection" class="text-gray-300 hover:text-white">Multi-Chain Transfer</a>
-                <a href="#adminPanel" class="text-gray-300 hover:text-white">Founder Panel</a>
-            </nav>
-
-            <div class="flex items-center space-x-3">
+            <!-- Logged Out View Navbar -->
+            <div id="loggedOutNav" class="flex items-center space-x-3">
                 <a href="https://t.me/gadaap2p_bot" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold text-xs md:text-sm px-3.5 py-2 rounded-lg transition shadow-md">
                     <i class="fa-brands fa-telegram text-base mr-1"></i> @gadaap2p_bot
                 </a>
-                <button onclick="openRegisterModal()" class="bg-brandGold text-black font-bold px-4 py-2 rounded-lg hover:bg-yellow-400 transition text-sm">
-                    Register
+                <button onclick="openAuthModal()" class="bg-brandGold text-black font-bold px-4 py-2 rounded-lg hover:bg-yellow-400 transition text-sm">
+                    Register / Login
+                </button>
+            </div>
+
+            <!-- Logged In View Navbar -->
+            <div id="loggedInNav" class="hidden flex items-center space-x-4">
+                <span id="kycBadge" class="text-xs px-3 py-1 rounded-full font-bold"></span>
+                <span id="userBadge" class="text-xs bg-brandAccent text-gray-300 px-3 py-1 rounded-full border border-gray-700 font-mono"></span>
+                <button onclick="openKycModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition">
+                    KYC Verification
+                </button>
+                <button onclick="handleLogout()" class="bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600 hover:text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition">
+                    Log Out
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-
-        <!-- Top Announcement Banner -->
-        <div class="bg-gradient-to-r from-sky-950/80 via-brandCard to-emerald-950/80 border border-sky-500/30 rounded-xl p-5 shadow-2xl flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div class="flex items-center space-x-4">
-                <div class="p-3.5 bg-sky-500/20 rounded-xl text-sky-400">
-                    <i class="fa-solid fa-shield-halved text-3xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                        <span>GadaaP2P Escrow Security Protocol</span>
-                    </h3>
-                    <p class="text-sm text-gray-300 mt-0.5">
-                        Please start **@gadaap2p_bot** on Telegram and register your email before initiating P2P trades.
-                    </p>
-                </div>
-            </div>
-
-            <a href="https://t.me/gadaap2p_bot?start=register" target="_blank" class="bg-sky-500 hover:bg-sky-400 text-white font-bold text-sm px-5 py-2.5 rounded-lg transition shadow-lg shadow-sky-500/20 whitespace-nowrap">
-                Start Telegram Bot <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>
-            </a>
+    <!-- LANDING PAGE -->
+    <section id="landingPage" class="max-w-4xl mx-auto px-4 text-center my-auto py-16 space-y-6">
+        <div class="inline-flex items-center space-x-2 bg-brandGold/10 border border-brandGold/30 text-brandGold text-xs font-semibold px-4 py-1.5 rounded-full mb-2">
+            <i class="fa-solid fa-user-shield"></i>
+            <span>Founder Manual KYC & Selfie Review Protected</span>
         </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight">Buy & Sell Crypto Safely with Verified Traders</h1>
+        <p class="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+            GadaaP2P requires mandatory Telegram Bot email confirmation and Founder manual ID + Live Selfie verification before trading.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
+            <a href="https://t.me/gadaap2p_bot?start=register" target="_blank" class="w-full sm:w-auto bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg shadow-sky-500/20">
+                <i class="fa-brands fa-telegram text-xl"></i>
+                <span>Start @gadaap2p_bot</span>
+            </a>
+            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-brandGold hover:bg-yellow-400 text-black font-bold px-8 py-3.5 rounded-xl shadow-lg">
+                Register on Web
+            </button>
+        </div>
+    </section>
 
-        <!-- Live P2P Market Orders Table -->
+    <!-- PROTECTED USER DASHBOARD -->
+    <main id="protectedDashboard" class="hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div class="bg-brandCard border border-gray-800 rounded-xl p-6 shadow-xl">
             <div class="flex justify-between items-center pb-4 border-b border-gray-800">
-                <h2 class="text-xl font-bold text-white flex items-center space-x-2">
-                    <i class="fa-solid fa-right-left text-brandGold"></i>
-                    <span>Live P2P Express Market</span>
-                </h2>
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-right-left text-brandGold"></i>
+                        <span>Live P2P Market</span>
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1">Starting Rate: 1 USDT = 190 ETB</p>
+                </div>
                 <button onclick="openCreateOrderModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-sm transition">
                     + Post New Ad / Order
                 </button>
@@ -96,62 +105,83 @@
                             <th class="py-3 px-4 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="ordersTableBody" class="divide-y divide-gray-800">
-                        <!-- Dynamic Order Rows Render Here -->
-                    </tbody>
+                    <tbody id="ordersTableBody" class="divide-y divide-gray-800"></tbody>
                 </table>
             </div>
         </div>
-
-        <!-- Multi-Chain Wallet & Withdrawal Section -->
-        <div id="withdrawSection" class="bg-brandCard border border-gray-800 rounded-xl p-6 shadow-xl">
-            <h2 class="text-xl font-bold text-white flex items-center space-x-2 pb-4 border-b border-gray-800 mb-4">
-                <i class="fa-solid fa-network-wired text-brandGold"></i>
-                <span>Multi-Chain Blockchain Withdrawal & Transfer</span>
-            </h2>
-
-            <form onsubmit="handleWithdrawal(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Blockchain Network</label>
-                    <select id="wNetwork" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
-                        <option value="TRC20">USDT - TRC20 (Tron Network)</option>
-                        <option value="BEP20">USDT - BEP20 (BNB Smart Chain)</option>
-                        <option value="ERC20">USDT - ERC20 (Ethereum Network)</option>
-                        <option value="SOLANA">USDT - SOLANA Network</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Amount (USDT)</label>
-                    <input type="number" id="wAmount" placeholder="100.00" required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
-                </div>
-
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Destination Wallet Address</label>
-                    <input type="text" id="wAddress" placeholder="e.g. TXYZ123... or 0xABC..." required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
-                </div>
-
-                <div class="md:col-span-2">
-                    <button type="submit" class="bg-brandGold text-black font-bold px-6 py-2.5 rounded-lg hover:bg-yellow-400 transition w-full md:w-auto">
-                        Submit Withdrawal Request
-                    </button>
-                </div>
-            </form>
-        </div>
-
     </main>
 
-    <!-- Registration Modal -->
-    <div id="regModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-brandCard border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
-            <button onclick="closeRegisterModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <!-- SECRET FOUNDER ADMIN PANEL (Only visible to Admin) -->
+    <div id="founderAdminPanel" class="hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-brandCard border border-amber-500/30 rounded-xl p-6 shadow-2xl">
+            <h2 class="text-xl font-bold text-amber-400 flex items-center space-x-2 pb-4 border-b border-gray-800 mb-6">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Founder Admin KYC Review Control Panel</span>
+            </h2>
 
-            <h2 class="text-xl font-bold text-white mb-2">Create GadaaP2P Account</h2>
-            <p class="text-xs text-gray-400 mb-4">Please make sure you registered your email on Telegram Bot **@gadaap2p_bot** first.</p>
+            <div id="pendingKycContainer" class="space-y-6">
+                <!-- Pending Submissions render here for Admin inspection -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Real KYC Modal -->
+    <div id="kycModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-brandCard border border-gray-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeKycModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+
+            <h2 class="text-xl font-bold text-white mb-2">Real KYC & Live Selfie Verification</h2>
+            <p class="text-xs text-gray-400 mb-4">Upload clear ID and live selfie. The Founder will manually inspect and approve your application.</p>
+
+            <form onsubmit="handleKycSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Full Legal Name</label>
+                    <input type="text" id="kName" required placeholder="John Doe" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">ID Document Type</label>
+                        <select id="kType" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+                            <option value="National_ID">National ID / Kebele Card</option>
+                            <option value="Passport">Passport</option>
+                            <option value="Drivers_License">Driver's License</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">ID Number</label>
+                        <input type="text" id="kNum" required placeholder="ID-1234567" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">1. Upload ID Front Photo</label>
+                    <input type="file" id="kIdImg" accept="image/*" required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2 text-xs text-gray-300">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">2. Upload Live Selfie Photo</label>
+                    <input type="file" id="kSelfieImg" accept="image/*" required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2 text-xs text-gray-300">
+                </div>
+
+                <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-lg transition">
+                    Submit for Founder Review
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-brandCard border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+
+            <h2 class="text-xl font-bold text-white mb-2">Create / Access Account</h2>
+            <p class="text-xs text-gray-400 mb-4">Register your email on **@gadaap2p_bot** first before signing up.</p>
 
             <div id="alertMsg" class="hidden p-3 mb-4 text-xs rounded-lg"></div>
 
-            <form id="regForm" onsubmit="handleRegistration(event)" class="space-y-4">
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-300 mb-1">Email (Registered on Bot)</label>
                     <input type="email" id="userEmail" required placeholder="example@gmail.com" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
@@ -163,25 +193,20 @@
                 </div>
 
                 <button type="submit" class="w-full bg-brandGold text-black font-bold py-2.5 rounded-lg hover:bg-yellow-400 transition">
-                    Verify & Request OTP
+                    Submit & Proceed
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Create Ad / Order Modal -->
+    <!-- Create Ad Modal -->
     <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
         <div class="bg-brandCard border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
             <button onclick="closeCreateOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
 
-            <h2 class="text-xl font-bold text-white mb-4">Post New P2P Trade Order</h2>
+            <h2 class="text-xl font-bold text-white mb-4">Post Real Trade Order</h2>
 
             <form onsubmit="handleCreateOrder(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">Merchant Email</label>
-                    <input type="email" id="oEmail" required placeholder="merchant@gmail.com" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
-                </div>
-
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-gray-300 mb-1">Order Type</label>
@@ -191,80 +216,184 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1">Price (ETB)</label>
-                        <input type="number" step="0.01" id="oPrice" required placeholder="150.25" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Price (ETB, Min 190)</label>
+                        <input type="number" step="0.01" min="190" id="oPrice" required placeholder="190.00" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-gray-300 mb-1">Amount (USDT)</label>
-                    <input type="number" id="oAmount" required placeholder="500" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+                    <input type="number" id="oAmount" required placeholder="100" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-gray-300 mb-1">Payment Methods</label>
-                    <input type="text" id="oPayment" required placeholder="Telebirr, CBE, BOA" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+                    <input type="text" id="oPayment" required placeholder="Telebirr, CBE" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
                 </div>
 
                 <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-lg transition">
-                    Publish Order
+                    Publish Live Order
                 </button>
             </form>
         </div>
     </div>
 
-    <footer class="bg-brandCard border-t border-gray-800 text-center py-4 text-xs text-gray-500">
-        &copy; 2026 GadaaP2P Exchange. All rights reserved. Founded & Maintained by Gadaa Admin.
+    <footer class="bg-brandCard border-t border-gray-800 text-center py-4 text-xs text-gray-500 flex justify-between px-8">
+        <span>&copy; 2026 GadaaP2P Exchange. All rights reserved.</span>
+        <button onclick="openFounderSecretLogin()" class="text-gray-600 hover:text-amber-400 font-mono">🔑 Founder Portal</button>
     </footer>
 
     <script>
-        function openRegisterModal() { document.getElementById('regModal').classList.remove('hidden'); }
-        function closeRegisterModal() { document.getElementById('regModal').classList.add('hidden'); }
-        function openCreateOrderModal() { document.getElementById('orderModal').classList.remove('hidden'); }
-        function closeCreateOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
+        let currentUser = localStorage.getItem('gadaaUser');
+        let currentKycStatus = 'NOT_SUBMITTED';
+        let adminKey = localStorage.getItem('gadaaAdminKey');
 
-        async function fetchLiveOrders() {
-            try {
-                const res = await fetch('/api/p2p/orders');
+        async function checkAuthView() {
+            if (currentUser) {
+                document.getElementById('landingPage').classList.add('hidden');
+                document.getElementById('protectedDashboard').classList.remove('hidden');
+                document.getElementById('loggedOutNav').classList.add('hidden');
+                document.getElementById('loggedInNav').classList.remove('hidden');
+                document.getElementById('userBadge').innerText = currentUser;
+
+                const res = await fetch(`/api/kyc/status?email=${encodeURIComponent(currentUser)}`);
                 const data = await res.json();
-                const tbody = document.getElementById('ordersTableBody');
-                tbody.innerHTML = '';
+                currentKycStatus = data.kycStatus;
 
-                if (data.success && data.orders.length > 0) {
-                    data.orders.forEach(ord => {
-                        tbody.innerHTML += `
-                            <tr class="hover:bg-brandAccent/50 transition">
-                                <td class="py-4 px-4 font-medium flex items-center space-x-3">
-                                    <div class="w-9 h-9 rounded-full bg-emerald-950 text-emerald-400 flex items-center justify-center font-bold">M</div>
-                                    <div>
-                                        <div class="font-bold text-white">${ord.merchantEmail}</div>
-                                        <div class="text-xs text-gray-400">Verified Merchant</div>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-4 font-bold text-lg text-white">${ord.price} <span class="text-xs font-normal text-gray-400">ETB</span></td>
-                                <td class="py-4 px-4">
-                                    <div class="text-xs">Available: <span class="text-white font-bold">${ord.availableAmount} USDT</span></div>
-                                </td>
-                                <td class="py-4 px-4">
-                                    <span class="bg-amber-500/10 text-amber-400 text-xs font-semibold px-2.5 py-1 rounded border border-amber-500/20">${ord.paymentMethod}</span>
-                                </td>
-                                <td class="py-4 px-4 text-right">
-                                    <button onclick="startTrade('${ord.id}')" class="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-1.5 rounded-lg transition text-xs">
-                                        Trade USDT
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    });
+                const badge = document.getElementById('kycBadge');
+                if (currentKycStatus === 'VERIFIED') {
+                    badge.className = "text-xs bg-emerald-950 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-bold";
+                    badge.innerText = "Verified KYC ✓";
+                } else if (currentKycStatus === 'PENDING_ADMIN') {
+                    badge.className = "text-xs bg-sky-950 text-sky-400 px-3 py-1 rounded-full border border-sky-500/30 font-bold";
+                    badge.innerText = "Pending Founder Review ⏳";
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-500">No live P2P orders available.</td></tr>`;
+                    badge.className = "text-xs bg-amber-950 text-amber-400 px-3 py-1 rounded-full border border-amber-500/30 font-bold";
+                    badge.innerText = "Unverified KYC ⚠️";
                 }
-            } catch (err) {
-                console.error(err);
+
+                fetchLiveOrders();
+            } else {
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('protectedDashboard').classList.add('hidden');
+                document.getElementById('loggedOutNav').classList.remove('hidden');
+                document.getElementById('loggedInNav').classList.add('hidden');
             }
         }
 
-        async function handleRegistration(e) {
+        function openFounderSecretLogin() {
+            const key = prompt('Enter Founder Admin Key:');
+            if (key === 'GadaaFounder2026') {
+                adminKey = key;
+                localStorage.setItem('gadaaAdminKey', key);
+                loadFounderPanel();
+            } else if(key) {
+                alert('Access Denied: Invalid Founder Key!');
+            }
+        }
+
+        async function loadFounderPanel() {
+            if (!adminKey) return;
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('protectedDashboard').classList.add('hidden');
+            document.getElementById('founderAdminPanel').classList.remove('hidden');
+
+            const res = await fetch('/api/admin/pending-kyc', {
+                headers: { 'adminKey': adminKey }
+            });
+            const data = await res.json();
+            const container = document.getElementById('pendingKycContainer');
+            container.innerHTML = '';
+
+            if (data.success && data.pendingKyc.length > 0) {
+                data.pendingKyc.forEach(k => {
+                    container.innerHTML += `
+                        <div class="bg-brandDark border border-gray-700 rounded-xl p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h3 class="font-bold text-white text-lg">${k.fullName} (${k.userEmail})</h3>
+                                <p class="text-xs text-gray-400">ID Type: ${k.idType} | ID #: ${k.idNumber}</p>
+                                <div class="mt-4 flex space-x-3">
+                                    <button onclick="processKyc('${k.userEmail}', 'APPROVE')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs">Approve & Verify</button>
+                                    <button onclick="processKyc('${k.userEmail}', 'REJECT')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-lg text-xs">Reject</button>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <span class="text-xs text-gray-400 block mb-1">Uploaded ID</span>
+                                    <img src="${k.idFrontImg}" class="w-full h-32 object-cover rounded-lg border border-gray-700">
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-400 block mb-1">Live Selfie</span>
+                                    <img src="${k.selfieImg}" class="w-full h-32 object-cover rounded-lg border border-gray-700">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                container.innerHTML = `<p class="text-gray-500 text-center py-6">No pending KYC submissions to inspect.</p>`;
+            }
+        }
+
+        async function processKyc(userEmail, action) {
+            const res = await fetch('/api/admin/verify-kyc-action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'adminKey': adminKey },
+                body: JSON.stringify({ userEmail, action })
+            });
+
+            const data = await res.json();
+            alert(data.message);
+            loadFounderPanel();
+        }
+
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
+        function openKycModal() { document.getElementById('kycModal').classList.remove('hidden'); }
+        function closeKycModal() { document.getElementById('kycModal').classList.add('hidden'); }
+        function openCreateOrderModal() { 
+            if (currentKycStatus !== 'VERIFIED') {
+                alert('KYC Approval Pending: You must wait for Founder manual review before posting orders!');
+                return;
+            }
+            document.getElementById('orderModal').classList.remove('hidden'); 
+        }
+        function closeCreateOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
+
+        const fileToBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function handleKycSubmit(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('kName').value;
+            const idType = document.getElementById('kType').value;
+            const idNumber = document.getElementById('kNum').value;
+            const idFile = document.getElementById('kIdImg').files[0];
+            const selfieFile = document.getElementById('kSelfieImg').files[0];
+
+            const idFrontImg = await fileToBase64(idFile);
+            const selfieImg = await fileToBase64(selfieFile);
+
+            const res = await fetch('/api/kyc/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userEmail: currentUser, fullName, idType, idNumber, idFrontImg, selfieImg })
+            });
+
+            const data = await res.json();
+            alert(data.message);
+
+            if (data.success) {
+                closeKycModal();
+                checkAuthView();
+            }
+        }
+
+        async function handleAuthSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('userEmail').value;
             const alertMsg = document.getElementById('alertMsg');
@@ -282,69 +411,68 @@
                 alertMsg.className = "p-3 mb-4 text-xs rounded-lg bg-red-900/50 text-red-300 border border-red-500/30";
                 alertMsg.innerText = data.message;
             } else {
-                await fetch('/api/request-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
+                localStorage.setItem('gadaaUser', email);
+                currentUser = email;
+                closeAuthModal();
+                checkAuthView();
+            }
+        }
 
-                alertMsg.className = "p-3 mb-4 text-xs rounded-lg bg-green-900/50 text-green-300 border border-green-500/30";
-                alertMsg.innerText = "Email verified! OTP code has been sent to your @gadaap2p_bot.";
+        function handleLogout() {
+            localStorage.removeItem('gadaaUser');
+            currentUser = null;
+            checkAuthView();
+        }
+
+        async function fetchLiveOrders() {
+            const res = await fetch('/api/p2p/orders');
+            const data = await res.json();
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+
+            if (data.success && data.orders.length > 0) {
+                data.orders.forEach(ord => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-brandAccent/50 transition">
+                            <td class="py-4 px-4 font-bold text-white">${ord.merchantName} (${ord.merchantEmail})</td>
+                            <td class="py-4 px-4 font-bold text-lg text-emerald-400">${ord.price} ETB</td>
+                            <td class="py-4 px-4 text-xs">${ord.availableAmount} USDT</td>
+                            <td class="py-4 px-4"><span class="bg-amber-500/10 text-amber-400 text-xs px-2 py-1 rounded border border-amber-500/20">${ord.paymentMethod}</span></td>
+                            <td class="py-4 px-4 text-right">
+                                <button class="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs">Trade</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">No active real orders available. Post the first ad!</td></tr>`;
             }
         }
 
         async function handleCreateOrder(e) {
             e.preventDefault();
-            const merchantEmail = document.getElementById('oEmail').value;
             const type = document.getElementById('oType').value;
             const price = document.getElementById('oPrice').value;
             const amount = document.getElementById('oAmount').value;
             const paymentMethod = document.getElementById('oPayment').value;
 
-            await fetch('/api/p2p/create-order', {
+            const res = await fetch('/api/p2p/create-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ merchantEmail, type, price, amount, minLimit: 1000, maxLimit: 100000, paymentMethod })
-            });
-
-            alert('New Order Published Live!');
-            closeCreateOrderModal();
-            fetchLiveOrders();
-        }
-
-        async function handleWithdrawal(e) {
-            e.preventDefault();
-            const network = document.getElementById('wNetwork').value;
-            const amount = document.getElementById('wAmount').value;
-            const destinationAddress = document.getElementById('wAddress').value;
-
-            const res = await fetch('/api/wallet/withdraw', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userEmail: 'user@gmail.com', network, amount, destinationAddress })
+                body: JSON.stringify({ merchantEmail: currentUser, type, price, amount, paymentMethod })
             });
 
             const data = await res.json();
-            alert(data.message);
+            if (!data.success) {
+                alert(data.message);
+            } else {
+                alert('Real Order Published Live!');
+                closeCreateOrderModal();
+                fetchLiveOrders();
+            }
         }
 
-        async function startTrade(orderId) {
-            const buyerEmail = prompt('Enter your registered email to start trade:');
-            if (!buyerEmail) return;
-
-            const res = await fetch('/api/p2p/start-trade', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ orderId, buyerEmail, cryptoAmount: 50 })
-            });
-
-            const data = await res.json();
-            alert(data.message);
-            fetchLiveOrders();
-        }
-
-        // Initialize Live Data on Load
-        fetchLiveOrders();
+        checkAuthView();
     </script>
 </body>
 </html>
