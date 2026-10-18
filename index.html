@@ -91,7 +91,6 @@
             const email = document.getElementById('userEmail').value;
             const alertMsg = document.getElementById('alertMsg');
 
-            // Step 1: Check Bot Email Registration
             const res = await fetch('/api/verify-bot-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -105,7 +104,6 @@
                 alertMsg.className = "p-3 mb-4 text-xs rounded-lg bg-red-900/50 text-red-300 border border-red-500/30";
                 alertMsg.innerText = data.message;
             } else {
-                // Request OTP
                 await fetch('/api/request-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
