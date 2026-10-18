@@ -10,9 +10,8 @@ const bot = new TelegramBot(token, { polling: true });
 
 // Registered Users Storage
 const registeredUsers = new Map(); // email -> { telegramId, registeredAt }
-const otpStore = new Map(); // email -> otpCode
 
-console.log('🤖 @gadaap2p_bot is live and responsive...');
+console.log('🤖 @gadaap2p_bot is running with enhanced email parser...');
 
 // 1. Command /start
 bot.onText(/\/start/, (msg) => {
@@ -22,40 +21,46 @@ bot.onText(/\/start/, (msg) => {
   const text = 
     `👋 *Welcome, \${firstName}!*\n\n` +
     `This is the official **GadaaP2P Exchange Bot**.\n\n` +
-    `📌 *Registration Requirement:*\n` +
+    `📌 *Registration Step:*\n` +
     `Please type and send your **Email Address** in this chat to enable web registration.\n\n` +
     `*Example:* \`example@gmail.com\``;
 
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown' });
 });
 
-// 2. Email Registration Handler with Instant Bot Reply
+// 2. Flexible & Smart Email Handler
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
-  const text = msg.text ? msg.text.trim() : '';
+  const rawText = msg.text ? msg.text.trim() : '';
 
-  if (!text || text.startsWith('/')) return;
+  if (!rawText || rawText.startsWith('/')) return;
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+\$/;
-  if (emailRegex.test(text)) {
-    const email = text.toLowerCase();
+  // Smart Regex to extract valid email even if user types extra text
+  const extractedEmail = rawText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+
+  if (extractedEmail) {
+    const email = extractedEmail[0].toLowerCase();
     
-    // Save email to Bot memory
+    // Save email into Bot memory
     registeredUsers.set(email, { telegramId: chatId, registeredAt: new Date() });
 
     const confirmationMsg = 
       `🎉 *Registration Successful!*\n\n` +
-      `✅ *Email:* \`\${email}\`\n` +
-      `🆔 *Telegram ID:* \`\${chatId}\`\n\n` +
-      `Your email has been successfully saved on GadaaP2P! You can now proceed to login on the website.`;
+      `✅ *Registered Email:* \`${email}\`\n` +
+      `🆔 *Telegram ID:* \`${chatId}\`\n\n` +
+      `Your email is now registered on GadaaP2P! You can proceed to login on the website.`;
 
     bot.sendMessage(chatId, confirmationMsg, { parse_mode: 'Markdown' });
   } else {
-    bot.sendMessage(chatId, `⚠️ *Invalid Email Format!* Please enter a valid email address (e.g. name@gmail.com).`, { parse_mode: 'Markdown' });
+    bot.sendMessage(
+      chatId, 
+      `⚠️ *Invalid Email Format!*\n\nPlease make sure your input contains a valid email address.\n*Example:* \`name@gmail.com\``, 
+      { parse_mode: 'Markdown' }
+    );
   }
 });
 
-// Helper: Check Email
+// Helper Function
 function isEmailRegisteredOnBot(email) {
   return registeredUsers.has(email.toLowerCase());
 }
