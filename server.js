@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const { sendTelegramOTP, isEmailRegisteredOnBot } = require('./bot');
+const { isEmailRegisteredOnBot } = require('./bot');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,20 +11,19 @@ app.use(express.json({ limit: '15mb' }));
 const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
-// Real Data Stores
+// Data Stores
 const p2pOrders = [];
-const kycRequests = new Map(); // email -> { userEmail, fullName, idType, idNumber, idFrontImg, selfieImg, status }
+const kycRequests = new Map(); // email -> { country, city, fullName, idType, idNumber, idFrontImg, selfieImg, status }
 
-// Admin Verification Middleware
 const isAdmin = (req, res, next) => {
   const { adminKey } = req.headers;
   if (adminKey === process.env.ADMIN_SECRET_KEY || adminKey === "GadaaFounder2026") {
     return next();
   }
-  return res.status(403).json({ success: false, message: "Access denied. Founder privileges required." });
+  return res.status(403).json({ success: false, message: "Access denied." });
 };
 
-// --- BOT & AUTH APIS ---
+// --- AUTH & BOT VERIFICATION ---
 app.post('/api/verify-bot-email', (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
@@ -39,17 +38,18 @@ app.post('/api/verify-bot-email', (req, res) => {
   return res.json({ success: true, message: 'Email verified on bot successfully!' });
 });
 
-// --- USER KYC SUBMISSION API ---
+// --- BINANCE STYLE KYC SUBMISSION ---
 app.post('/api/kyc/submit', (req, res) => {
-  const { userEmail, fullName, idType, idNumber, idFrontImg, selfieImg } = req.body;
+  const { userEmail, country, city, fullName, idType, idNumber, idFrontImg, selfieImg } = req.body;
 
-  if (!userEmail || !fullName || !idNumber || !idFrontImg || !selfieImg) {
-    return res.status(400).json({ success: false, message: 'All KYC fields including ID photo and live selfie are required.' });
+  if (!userEmail || !country || !city || !fullName || !idNumber || !idFrontImg || !selfieImg) {
+    return res.status(400).json({ success: false, message: 'All fields including Country, City, ID Photo, and Live Selfie are required.' });
   }
 
-  // Save with PENDING_ADMIN status so Founder can manually review
   kycRequests.set(userEmail.toLowerCase(), {
     userEmail,
+    country,
+    city,
     fullName,
     idType,
     idNumber,
@@ -61,7 +61,7 @@ app.post('/api/kyc/submit', (req, res) => {
 
   return res.json({ 
     success: true, 
-    message: 'KYC & Live Selfie submitted successfully! Pending Founder/Admin manual approval.',
+    message: 'Identity Verification submitted successfully! Under review.',
     kycStatus: 'PENDING_ADMIN'
   });
 });
@@ -71,45 +71,13 @@ app.get('/api/kyc/status', (req, res) => {
   if (!email) return res.status(400).json({ success: false, message: 'Email required' });
 
   const kyc = kycRequests.get(email.toLowerCase());
-  if (!kyc) {
-    return res.json({ success: true, kycStatus: 'NOT_SUBMITTED' });
-  }
+  if (!kyc) return res.json({ success: true, kycStatus: 'UNVERIFIED' });
 
   return res.json({ success: true, kycStatus: kyc.status });
 });
 
-// --- FOUNDER ADMIN KYC MANAGEMENT APIS ---
-
-// 1. Get All Pending KYC Submissions for Founder Review
-app.get('/api/admin/pending-kyc', isAdmin, (req, res) => {
-  const pendingList = Array.from(kycRequests.values()).filter(k => k.status === 'PENDING_ADMIN');
-  return res.json({ success: true, pendingKyc: pendingList });
-});
-
-// 2. Founder Manual Approve or Reject Action
-app.post('/api/admin/verify-kyc-action', isAdmin, (req, res) => {
-  const { userEmail, action } = req.body; // action: 'APPROVE' or 'REJECT'
-  const kyc = kycRequests.get(userEmail.toLowerCase());
-
-  if (!kyc) {
-    return res.status(404).json({ success: false, message: 'KYC request not found' });
-  }
-
-  if (action === 'APPROVE') {
-    kyc.status = 'VERIFIED';
-    return res.json({ success: true, message: `User ${userEmail} KYC approved successfully!` });
-  } else if (action === 'REJECT') {
-    kyc.status = 'REJECTED';
-    return res.json({ success: true, message: `User ${userEmail} KYC rejected!` });
-  }
-
-  return res.status(400).json({ success: false, message: 'Invalid action' });
-});
-
-// --- REAL P2P ORDERS APIS ---
-app.get('/api/p2p/orders', (req, res) => {
-  return res.json({ success: true, orders: p2pOrders });
-});
+// --- P2P MARKET APIS ---
+app.get('/api/p2p/orders', (req, res) => res.json({ success: true, orders: p2pOrders }));
 
 app.post('/api/p2p/create-order', (req, res) => {
   const { merchantEmail, type, price, amount, paymentMethod } = req.body;
@@ -118,7 +86,7 @@ app.post('/api/p2p/create-order', (req, res) => {
   if (!kyc || kyc.status !== 'VERIFIED') {
     return res.status(403).json({ 
       success: false, 
-      message: 'KYC Required: Your KYC is not verified by Founder yet. Please wait for Admin approval!' 
+      message: 'KYC Required: Complete Identity Verification before posting ads.' 
     });
   }
 
@@ -140,13 +108,9 @@ app.post('/api/p2p/create-order', (req, res) => {
   };
 
   p2pOrders.unshift(newOrder);
-  return res.json({ success: true, message: 'Real P2P Order published live!', order: newOrder });
+  return res.json({ success: true, message: 'Order published live!', order: newOrder });
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
-});
+app.get('*', (req, res) => res.sendFile(path.join(publicPath, 'index.html')));
 
-app.listen(PORT, () => {
-  console.log(`🚀 GadaaP2P Engine running with Founder Manual Verification on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 GadaaP2P Engine running on port ${PORT}`));
