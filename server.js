@@ -6,14 +6,12 @@ const { sendTelegramOTP, verifyOTP, isEmailRegisteredOnBot } = require('./bot');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Allow high-resolution Base64 images up to 50MB
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
-// Data Stores
 const p2pOrders = [];
 const kycRequests = new Map();
 
@@ -27,7 +25,6 @@ const isSuperAdmin = (req, res, next) => {
   return res.status(403).json({ success: false, message: "Access denied. Restricted exclusively to Super Admin gemechureta387@gmail.com." });
 };
 
-// --- AUTH APIS ---
 app.post('/api/auth/request-otp', async (req, res) => {
   try {
     const { email } = req.body;
@@ -63,7 +60,6 @@ app.post('/api/auth/verify-otp', (req, res) => {
   }
 });
 
-// --- KYC SUBMISSION API WITH ERROR CATCHING ---
 app.post('/api/kyc/submit', (req, res) => {
   try {
     const { userEmail, country, city, fullName, idType, idNumber, idFrontImg, selfieImg } = req.body;
@@ -77,11 +73,11 @@ app.post('/api/kyc/submit', (req, res) => {
     }
 
     if (!idFrontImg) {
-      return res.status(400).json({ success: false, message: 'ID Front photo is missing. Please upload a clear photo of your ID.' });
+      return res.status(400).json({ success: false, message: 'ID Front photo is missing.' });
     }
 
     if (!selfieImg) {
-      return res.status(400).json({ success: false, message: 'Live Selfie photo is missing. Please take or upload a clear selfie.' });
+      return res.status(400).json({ success: false, message: 'Live Selfie photo is required. Please upload your selfie.' });
     }
 
     kycRequests.set(userEmail.toLowerCase(), {
@@ -117,7 +113,6 @@ app.get('/api/kyc/status', (req, res) => {
   return res.json({ success: true, kycStatus: kyc.status });
 });
 
-// --- SUPER ADMIN APIS ---
 app.get('/api/admin/pending-kyc', isSuperAdmin, (req, res) => {
   const pendingList = Array.from(kycRequests.values()).filter(k => k.status === 'PENDING_ADMIN');
   return res.json({ success: true, pendingKyc: pendingList });
@@ -142,7 +137,6 @@ app.post('/api/admin/verify-kyc-action', isSuperAdmin, (req, res) => {
   return res.status(400).json({ success: false, message: 'Invalid action.' });
 });
 
-// --- MARKET APIS ---
 app.get('/api/p2p/orders', (req, res) => res.json({ success: true, orders: p2pOrders }));
 
 app.post('/api/p2p/create-order', (req, res) => {
@@ -152,7 +146,7 @@ app.post('/api/p2p/create-order', (req, res) => {
   if (!kyc || kyc.status !== 'VERIFIED') {
     return res.status(403).json({ 
       success: false, 
-      message: 'KYC Required: Your ID and Live Selfie must be approved by Super Admin before posting orders!' 
+      message: 'KYC Verification Required: Your ID and Live Selfie must be approved by Super Admin before posting orders!' 
     });
   }
 
