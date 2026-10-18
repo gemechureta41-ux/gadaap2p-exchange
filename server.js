@@ -8,11 +8,11 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// Render static file fix: Explicitly serve public directory
+// Render static file fix
 const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
-// API 1: Check if Email is registered on Telegram Bot
+// API 1: Verify Bot Email Registration
 app.post('/api/verify-bot-email', (req, res) => {
   const { email } = req.body;
 
@@ -31,14 +31,14 @@ app.post('/api/verify-bot-email', (req, res) => {
   return res.json({ success: true, message: 'Email Bot irratti mirkanaa\'eera!' });
 });
 
-// API 2: Send OTP to Telegram
+// API 2: Send OTP
 app.post('/api/request-otp', async (req, res) => {
   const { email } = req.body;
   const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
   const result = await sendTelegramOTP(email, otpCode);
   if (result.success) {
-    return res.json({ success: true, message: 'OTP'n gara Bot keetiif ergameera.' });
+    return res.json({ success: true, message: 'OTP gara Bot keetiif ergameera.' });
   } else {
     return res.status(400).json({ success: false, message: result.message });
   }
