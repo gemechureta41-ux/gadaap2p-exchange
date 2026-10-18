@@ -2,8 +2,8 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GadaaP2P | OTP Secured Exchange</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GadaaP2P | Pro Mobile & Web P2P Exchange</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -14,7 +14,8 @@
                         brandGold: '#f0b90b',
                         brandDark: '#0b0e11',
                         brandCard: '#181a20',
-                        brandAccent: '#1e2329'
+                        brandAccent: '#1e2329',
+                        brandBorder: '#2b313a'
                     }
                 }
             }
@@ -22,105 +23,167 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-brandDark text-gray-100 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-brandDark text-gray-100 font-sans min-h-screen flex flex-col justify-between select-none pb-16 md:pb-0">
 
-    <!-- Header -->
-    <header class="bg-brandCard border-b border-gray-800 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-            <div class="flex items-center space-x-3">
-                <div class="bg-brandGold text-black font-extrabold text-xl px-3 py-1 rounded-lg">G</div>
-                <span class="text-xl font-bold tracking-wide">Gadaa<span class="text-brandGold">P2P</span></span>
+    <!-- Top Navigation Header (Responsive PC & Mobile) -->
+    <header class="bg-brandCard border-b border-brandBorder sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14 md:h-16">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-2.5">
+                <div class="bg-brandGold text-black font-black text-lg md:text-xl px-2.5 py-0.5 rounded-lg shadow-sm">G</div>
+                <span class="text-lg md:text-xl font-bold tracking-wide">Gadaa<span class="text-brandGold">P2P</span></span>
             </div>
 
-            <div id="loggedOutNav" class="flex items-center space-x-3">
-                <a href="https://t.me/gadaap2p_bot" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold text-xs md:text-sm px-3.5 py-2 rounded-lg transition shadow-md">
-                    <i class="fa-brands fa-telegram text-base mr-1"></i> @gadaap2p_bot
+            <!-- Logged Out Actions -->
+            <div id="loggedOutNav" class="flex items-center space-x-2 md:space-x-3">
+                <a href="https://t.me/gadaap2p_bot" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold text-xs md:text-sm px-3 py-1.5 md:py-2 rounded-lg transition flex items-center shadow">
+                    <i class="fa-brands fa-telegram text-sm md:text-base mr-1"></i>
+                    <span class="hidden sm:inline">@gadaap2p_bot</span>
                 </a>
-                <button onclick="openAuthModal()" class="bg-brandGold text-black font-bold px-4 py-2 rounded-lg hover:bg-yellow-400 transition text-sm">
+                <button onclick="openAuthModal()" class="bg-brandGold text-black font-bold px-3.5 py-1.5 md:py-2 rounded-lg hover:bg-yellow-400 transition text-xs md:text-sm shadow">
                     Log In / Register
                 </button>
             </div>
 
-            <div id="loggedInNav" class="hidden flex items-center space-x-4">
-                <span id="kycBadge" class="text-xs px-3 py-1 rounded-full font-bold"></span>
-                <span id="userBadge" class="text-xs bg-brandAccent text-gray-300 px-3 py-1 rounded-full border border-gray-700 font-mono"></span>
-                <button onclick="openKycModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg transition">
-                    Identity Verification (KYC)
+            <!-- Logged In Actions -->
+            <div id="loggedInNav" class="hidden flex items-center space-x-2 md:space-x-4">
+                <span id="kycBadge" class="text-[10px] md:text-xs px-2.5 py-1 rounded-full font-bold"></span>
+                <span id="userBadge" class="hidden sm:inline-block text-xs bg-brandAccent text-gray-300 px-3 py-1 rounded-full border border-gray-700 font-mono"></span>
+                <button onclick="openKycModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition flex items-center space-x-1">
+                    <i class="fa-solid fa-id-card"></i>
+                    <span class="hidden md:inline">Identity Verification (KYC)</span>
                 </button>
-                <button onclick="handleLogout()" class="bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600 hover:text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition">
-                    Log Out
+                <button onclick="handleLogout()" class="bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600 hover:text-white font-semibold text-xs px-2.5 py-1.5 rounded-lg transition">
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- LANDING PAGE -->
-    <section id="landingPage" class="max-w-4xl mx-auto px-4 text-center my-auto py-16 space-y-6">
-        <div class="inline-flex items-center space-x-2 bg-brandGold/10 border border-brandGold/30 text-brandGold text-xs font-semibold px-4 py-1.5 rounded-full mb-2">
-            <i class="fa-solid fa-lock"></i>
-            <span>Telegram Bot OTP Secured Trading</span>
+    <!-- LANDING PAGE (Logged Out view for Mobile & PC) -->
+    <section id="landingPage" class="max-w-4xl mx-auto px-4 text-center my-auto py-12 md:py-20 space-y-6">
+        <div class="inline-flex items-center space-x-2 bg-brandGold/10 border border-brandGold/30 text-brandGold text-xs font-semibold px-4 py-1.5 rounded-full">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Real-Time Telegram 2FA Protected</span>
         </div>
-        <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight">Fast & Secure P2P Crypto Market</h1>
-        <p class="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-            Trade USDT securely with instant 2FA Telegram OTP verification. Start **@gadaap2p_bot** to get your security codes!
+        <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white leading-tight">
+            Crypto P2P Market for <span class="text-brandGold">Android & Web</span>
+        </h1>
+        <p class="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
+            Trade USDT instantly with 0% fee. Please start our official Telegram Bot **@gadaap2p_bot** to verify your email address.
         </p>
         
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
-            <a href="https://t.me/gadaap2p_bot?start=register" target="_blank" class="w-full sm:w-auto bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg">
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-3 pt-2">
+            <a href="https://t.me/gadaap2p_bot?start=register" target="_blank" class="w-full sm:w-auto bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg active:scale-95 transition">
                 <i class="fa-brands fa-telegram text-xl"></i>
                 <span>Start @gadaap2p_bot</span>
             </a>
-            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-brandGold hover:bg-yellow-400 text-black font-bold px-8 py-3.5 rounded-xl shadow-lg">
+            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-brandGold hover:bg-yellow-400 text-black font-bold px-8 py-3.5 rounded-xl shadow-lg active:scale-95 transition">
                 Register on Web
             </button>
         </div>
     </section>
 
-    <!-- PROTECTED DASHBOARD -->
-    <main id="protectedDashboard" class="hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        <div class="bg-brandCard border border-gray-800 rounded-xl p-6 shadow-xl">
-            <div class="flex justify-between items-center pb-4 border-b border-gray-800">
+    <!-- BINANCE PRO DASHBOARD (Logged In View - Mobile & PC Responsive) -->
+    <main id="protectedDashboard" class="hidden max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
+        
+        <!-- Quick Stats Cards (Binance Mobile Style) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-brandCard border border-brandBorder rounded-xl p-3.5 shadow-sm">
+                <span class="text-[11px] text-gray-400 block font-medium">Market Base Rate</span>
+                <span class="text-base md:text-lg font-black text-brandGold">1 USDT = 190 ETB</span>
+            </div>
+            <div class="bg-brandCard border border-brandBorder rounded-xl p-3.5 shadow-sm">
+                <span class="text-[11px] text-gray-400 block font-medium">Security Level</span>
+                <span class="text-xs md:text-sm font-bold text-emerald-400 flex items-center mt-1">
+                    <i class="fa-solid fa-shield-check mr-1"></i> Telegram 2FA
+                </span>
+            </div>
+            <div class="bg-brandCard border border-brandBorder rounded-xl p-3.5 shadow-sm">
+                <span class="text-[11px] text-gray-400 block font-medium">Escrow Protection</span>
+                <span class="text-xs md:text-sm font-bold text-sky-400 flex items-center mt-1">
+                    <i class="fa-solid fa-lock mr-1"></i> Active Lock
+                </span>
+            </div>
+            <div class="bg-brandCard border border-brandBorder rounded-xl p-3.5 shadow-sm">
+                <span class="text-[11px] text-gray-400 block font-medium">Trading Fee</span>
+                <span class="text-xs md:text-sm font-bold text-white mt-1 block">0.00% Zero Fee</span>
+            </div>
+        </div>
+
+        <!-- Main Orderbook Card -->
+        <div class="bg-brandCard border border-brandBorder rounded-xl p-4 sm:p-6 shadow-xl">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-brandBorder">
                 <div>
-                    <h2 class="text-xl font-bold text-white flex items-center space-x-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-right-left text-brandGold"></i>
                         <span>P2P Express Market</span>
                     </h2>
-                    <p class="text-xs text-gray-400 mt-1">Starting Rate: 1 USDT = 190 ETB</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Verified P2P Orderbook (Minimum rate 190 ETB/USDT)</p>
                 </div>
-                <button onclick="openCreateOrderModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-sm transition">
+                <button onclick="openCreateOrderModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs sm:text-sm transition shadow active:scale-95">
                     + Post New Ad / Order
                 </button>
             </div>
 
-            <div class="overflow-x-auto mt-4">
-                <table class="w-full text-left text-sm text-gray-300">
-                    <thead class="bg-brandDark text-gray-400 text-xs uppercase border-b border-gray-800">
-                        <tr>
-                            <th class="py-3 px-4">Merchant</th>
-                            <th class="py-3 px-4">Price</th>
-                            <th class="py-3 px-4">Limit / Available</th>
-                            <th class="py-3 px-4">Payment Methods</th>
-                            <th class="py-3 px-4 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ordersTableBody" class="divide-y divide-gray-800"></tbody>
-                </table>
+            <!-- Responsive Table/Cards Container -->
+            <div class="mt-4">
+                <!-- Desktop Table View -->
+                <div class="hidden md:block overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-brandDark text-gray-400 text-xs uppercase border-b border-brandBorder">
+                            <tr>
+                                <th class="py-3 px-4">Merchant</th>
+                                <th class="py-3 px-4">Price</th>
+                                <th class="py-3 px-4">Limit / Available</th>
+                                <th class="py-3 px-4">Payment Methods</th>
+                                <th class="py-3 px-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody" class="divide-y divide-brandBorder"></tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Binance Card View (For Android & iPhones) -->
+                <div id="mobileOrdersContainer" class="md:hidden space-y-3">
+                    <!-- Dynamic Mobile Cards Render Here -->
+                </div>
             </div>
         </div>
+
     </main>
 
+    <!-- MOBILE BOTTOM NAVIGATION BAR (Binance Mobile App Style) -->
+    <div id="mobileBottomNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-brandCard border-t border-brandBorder z-40 flex justify-around items-center h-14 text-[10px]">
+        <button onclick="checkAuthView()" class="flex flex-col items-center text-brandGold font-medium">
+            <i class="fa-solid fa-house text-base mb-0.5"></i>
+            <span>P2P Home</span>
+        </button>
+        <button onclick="openCreateOrderModal()" class="flex flex-col items-center text-gray-400 hover:text-white">
+            <i class="fa-solid fa-circle-plus text-base mb-0.5 text-emerald-400"></i>
+            <span>Post Ad</span>
+        </button>
+        <button onclick="openKycModal()" class="flex flex-col items-center text-gray-400 hover:text-white">
+            <i class="fa-solid fa-id-card text-base mb-0.5 text-sky-400"></i>
+            <span>KYC Verification</span>
+        </button>
+        <button onclick="handleLogout()" class="flex flex-col items-center text-gray-400 hover:text-red-400">
+            <i class="fa-solid fa-user text-base mb-0.5"></i>
+            <span>Account</span>
+        </button>
+    </div>
+
     <!-- 2-STEP OTP AUTH MODAL -->
-    <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-brandCard border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+    <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brandCard border border-brandBorder w-full max-w-md rounded-2xl p-5 sm:p-6 shadow-2xl relative">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
 
-            <h2 class="text-xl font-bold text-white mb-2">Access GadaaP2P</h2>
-            <p class="text-xs text-gray-400 mb-4">Enter your email registered on **@gadaap2p_bot** to receive your 6-digit OTP code.</p>
+            <h2 class="text-xl font-bold text-white mb-1">Access GadaaP2P</h2>
+            <p class="text-xs text-gray-400 mb-4">Enter email registered on **@gadaap2p_bot** to receive OTP.</p>
 
             <div id="alertMsg" class="hidden p-3 mb-4 text-xs rounded-lg"></div>
 
-            <!-- Step 1 Form: Email -->
-            <form id="otpStep1Form" onsubmit="handleRequestOtp(event)" class="space-y-4">
+            <form id="otpStep1Form" onsubmit="handleRequestOtp(event)" class="space-y-3.5">
                 <div>
                     <label class="block text-xs font-semibold text-gray-300 mb-1">Email Address</label>
                     <input type="email" id="userEmail" required placeholder="example@gmail.com" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
@@ -129,14 +192,13 @@
                     <label class="block text-xs font-semibold text-gray-300 mb-1">Password</label>
                     <input type="password" id="userPass" required placeholder="••••••••" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
                 </div>
-                <button type="submit" id="btnSendOtp" class="w-full bg-brandGold text-black font-bold py-2.5 rounded-lg hover:bg-yellow-400 transition flex items-center justify-center space-x-2">
+                <button type="submit" class="w-full bg-brandGold text-black font-bold py-2.5 rounded-lg hover:bg-yellow-400 transition flex items-center justify-center space-x-2">
                     <i class="fa-brands fa-telegram text-lg"></i>
                     <span>Send OTP to Telegram Bot</span>
                 </button>
             </form>
 
-            <!-- Step 2 Form: Enter OTP -->
-            <form id="otpStep2Form" onsubmit="handleVerifyOtp(event)" class="space-y-4 hidden mt-4">
+            <form id="otpStep2Form" onsubmit="handleVerifyOtp(event)" class="space-y-3.5 hidden mt-2">
                 <div>
                     <label class="block text-xs font-semibold text-sky-400 mb-1">Enter 6-Digit Telegram OTP Code</label>
                     <input type="text" id="otpInput" maxlength="6" required placeholder="123456" class="w-full bg-brandDark border border-sky-500 rounded-lg p-3 text-center text-xl tracking-widest font-mono text-white focus:outline-none">
@@ -148,15 +210,15 @@
         </div>
     </div>
 
-    <!-- KYC MODAL -->
-    <div id="kycModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-brandCard border border-gray-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+    <!-- BINANCE STYLE KYC MODAL -->
+    <div id="kycModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brandCard border border-brandBorder w-full max-w-lg rounded-2xl p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeKycModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
 
             <h2 class="text-xl font-bold text-white mb-1">Identity Verification (KYC)</h2>
-            <p class="text-xs text-gray-400 mb-5">Fill in your legal details and upload valid identity documents for Founder approval.</p>
+            <p class="text-xs text-gray-400 mb-4">Fill in details and upload valid identity documents.</p>
 
-            <form onsubmit="handleKycSubmit(event)" class="space-y-4">
+            <form onsubmit="handleKycSubmit(event)" class="space-y-3.5">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-gray-300 mb-1">Country / Region</label>
@@ -205,14 +267,14 @@
         </div>
     </div>
 
-    <!-- Create Order Modal -->
-    <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-        <div class="bg-brandCard border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+    <!-- CREATE ORDER MODAL -->
+    <div id="orderModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brandCard border border-brandBorder w-full max-w-md rounded-2xl p-5 sm:p-6 shadow-2xl relative">
             <button onclick="closeCreateOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
 
             <h2 class="text-xl font-bold text-white mb-4">Post Real Trade Order</h2>
 
-            <form onsubmit="handleCreateOrder(event)" class="space-y-4">
+            <form onsubmit="handleCreateOrder(event)" class="space-y-3.5">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-gray-300 mb-1">Order Type</label>
@@ -244,7 +306,8 @@
         </div>
     </div>
 
-    <footer class="bg-brandCard border-t border-gray-800 text-center py-4 text-xs text-gray-500">
+    <!-- FOOTER -->
+    <footer class="hidden md:block bg-brandCard border-t border-brandBorder text-center py-4 text-xs text-gray-500">
         &copy; 2026 GadaaP2P Exchange. All rights reserved.
     </footer>
 
@@ -256,6 +319,7 @@
             if (currentUser) {
                 document.getElementById('landingPage').classList.add('hidden');
                 document.getElementById('protectedDashboard').classList.remove('hidden');
+                document.getElementById('mobileBottomNav').classList.remove('hidden');
                 document.getElementById('loggedOutNav').classList.add('hidden');
                 document.getElementById('loggedInNav').classList.remove('hidden');
                 document.getElementById('userBadge').innerText = currentUser;
@@ -266,13 +330,13 @@
 
                 const badge = document.getElementById('kycBadge');
                 if (currentKycStatus === 'VERIFIED') {
-                    badge.className = "text-xs bg-emerald-950 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-bold";
-                    badge.innerText = "Verified KYC ✓";
+                    badge.className = "text-[10px] md:text-xs bg-emerald-950 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/30 font-bold";
+                    badge.innerText = "Verified ✓";
                 } else if (currentKycStatus === 'PENDING_ADMIN') {
-                    badge.className = "text-xs bg-sky-950 text-sky-400 px-3 py-1 rounded-full border border-sky-500/30 font-bold";
-                    badge.innerText = "KYC Under Review ⏳";
+                    badge.className = "text-[10px] md:text-xs bg-sky-950 text-sky-400 px-2.5 py-1 rounded-full border border-sky-500/30 font-bold";
+                    badge.innerText = "Reviewing ⏳";
                 } else {
-                    badge.className = "text-xs bg-amber-950 text-amber-400 px-3 py-1 rounded-full border border-amber-500/30 font-bold";
+                    badge.className = "text-[10px] md:text-xs bg-amber-950 text-amber-400 px-2.5 py-1 rounded-full border border-amber-500/30 font-bold";
                     badge.innerText = "Unverified ⚠️";
                 }
 
@@ -280,6 +344,7 @@
             } else {
                 document.getElementById('landingPage').classList.remove('hidden');
                 document.getElementById('protectedDashboard').classList.add('hidden');
+                document.getElementById('mobileBottomNav').classList.add('hidden');
                 document.getElementById('loggedOutNav').classList.remove('hidden');
                 document.getElementById('loggedInNav').classList.add('hidden');
             }
@@ -305,7 +370,6 @@
         }
         function closeCreateOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
 
-        // Step 1: Request OTP from Server
         async function handleRequestOtp(e) {
             e.preventDefault();
             const email = document.getElementById('userEmail').value;
@@ -327,13 +391,11 @@
                 alertMsg.className = "p-3 mb-4 text-xs rounded-lg bg-sky-900/50 text-sky-300 border border-sky-500/30";
                 alertMsg.innerText = data.message;
                 
-                // Show Step 2 OTP Form
                 document.getElementById('otpStep1Form').classList.add('hidden');
                 document.getElementById('otpStep2Form').classList.remove('hidden');
             }
         }
 
-        // Step 2: Verify OTP Code
         async function handleVerifyOtp(e) {
             e.preventDefault();
             const email = document.getElementById('userEmail').value;
@@ -405,10 +467,14 @@
             const res = await fetch('/api/p2p/orders');
             const data = await res.json();
             const tbody = document.getElementById('ordersTableBody');
+            const mobileContainer = document.getElementById('mobileOrdersContainer');
+            
             tbody.innerHTML = '';
+            mobileContainer.innerHTML = '';
 
             if (data.success && data.orders.length > 0) {
                 data.orders.forEach(ord => {
+                    // Desktop Row
                     tbody.innerHTML += `
                         <tr class="hover:bg-brandAccent/50 transition">
                             <td class="py-4 px-4 font-bold text-white">${ord.merchantName} (${ord.merchantEmail})</td>
@@ -420,9 +486,33 @@
                             </td>
                         </tr>
                     `;
+
+                    // Mobile App Style Card
+                    mobileContainer.innerHTML += `
+                        <div class="bg-brandDark border border-brandBorder p-3.5 rounded-xl space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-white text-xs">${ord.merchantName}</span>
+                                <span class="bg-amber-500/10 text-amber-400 text-[10px] px-2 py-0.5 rounded border border-amber-500/20">${ord.paymentMethod}</span>
+                            </div>
+                            <div class="flex justify-between items-end pt-1">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 block">Price Rate</span>
+                                    <span class="text-base font-black text-emerald-400">${ord.price} ETB</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-gray-400 block">Available</span>
+                                    <span class="text-xs font-semibold text-gray-200">${ord.availableAmount} USDT</span>
+                                </div>
+                                <button class="bg-green-600 hover:bg-green-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs">
+                                    Trade
+                                </button>
+                            </div>
+                        </div>
+                    `;
                 });
             } else {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">No active real orders available. Post the first ad!</td></tr>`;
+                mobileContainer.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs">No active real orders available. Post the first ad!</div>`;
             }
         }
 
