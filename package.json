@@ -1,7 +1,7 @@
 {
   "name": "gadaap2p-exchange",
   "version": "1.0.0",
-  "description": "GadaaP2P Exchange Backend with Telegram Bot Integration",
+  "description": "GadaaP2P Real Exchange Engine with Multi-Chain Support & Telegram Bot Integration",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
