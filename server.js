@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const { isEmailRegisteredOnBot } = require('./bot');
+const { sendTelegramOTP, verifyOTP, isEmailRegisteredOnBot } = require('./bot');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,27 +15,35 @@ app.use(express.static(publicPath));
 const p2pOrders = [];
 const kycRequests = new Map(); // email -> { country, city, fullName, idType, idNumber, idFrontImg, selfieImg, status }
 
-const isAdmin = (req, res, next) => {
-  const { adminKey } = req.headers;
-  if (adminKey === process.env.ADMIN_SECRET_KEY || adminKey === "GadaaFounder2026") {
-    return next();
-  }
-  return res.status(403).json({ success: false, message: "Access denied." });
-};
+// --- OTP AUTHENTICATION APIS ---
 
-// --- AUTH & BOT VERIFICATION ---
-app.post('/api/verify-bot-email', (req, res) => {
+// Step 1: Request OTP (Checks Bot Email & Sends Telegram Message)
+app.post('/api/auth/request-otp', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
 
-  const registered = isEmailRegisteredOnBot(email);
-  if (!registered) {
-    return res.status(400).json({
-      success: false,
-      message: 'This email is not registered on @gadaap2p_bot! Please start the bot and send your email first.'
-    });
+  const result = await sendTelegramOTP(email);
+  if (!result.success) {
+    return res.status(400).json({ success: false, message: result.message });
   }
-  return res.json({ success: true, message: 'Email verified on bot successfully!' });
+
+  return res.json({ success: true, message: 'OTP code sent to your @gadaap2p_bot on Telegram!' });
+});
+
+// Step 2: Verify OTP & Grant Access
+app.post('/api/auth/verify-otp', (req, res) => {
+  const { email, otpCode } = req.body;
+
+  if (!email || !otpCode) {
+    return res.status(400).json({ success: false, message: 'Email and OTP code are required' });
+  }
+
+  const otpCheck = verifyOTP(email, otpCode);
+  if (!otpCheck.valid) {
+    return res.status(400).json({ success: false, message: otpCheck.message });
+  }
+
+  return res.json({ success: true, message: 'OTP Verified successfully! Welcome to GadaaP2P.' });
 });
 
 // --- BINANCE STYLE KYC SUBMISSION ---
@@ -43,7 +51,7 @@ app.post('/api/kyc/submit', (req, res) => {
   const { userEmail, country, city, fullName, idType, idNumber, idFrontImg, selfieImg } = req.body;
 
   if (!userEmail || !country || !city || !fullName || !idNumber || !idFrontImg || !selfieImg) {
-    return res.status(400).json({ success: false, message: 'All fields including Country, City, ID Photo, and Live Selfie are required.' });
+    return res.status(400).json({ success: false, message: 'All fields are required.' });
   }
 
   kycRequests.set(userEmail.toLowerCase(), {
@@ -61,7 +69,7 @@ app.post('/api/kyc/submit', (req, res) => {
 
   return res.json({ 
     success: true, 
-    message: 'Identity Verification submitted successfully! Under review.',
+    message: 'Identity Verification submitted successfully! Under Founder review.',
     kycStatus: 'PENDING_ADMIN'
   });
 });
@@ -113,4 +121,4 @@ app.post('/api/p2p/create-order', (req, res) => {
 
 app.get('*', (req, res) => res.sendFile(path.join(publicPath, 'index.html')));
 
-app.listen(PORT, () => console.log(`🚀 GadaaP2P Engine running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 GadaaP2P Engine running with OTP verification on port ${PORT}`));
