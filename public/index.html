@@ -52,7 +52,7 @@
                 <span id="kycBadge" class="text-[10px] md:text-xs px-2.5 py-1 rounded-full font-bold"></span>
                 <span id="userBadge" class="hidden sm:inline-block text-xs bg-brandAccent text-gray-300 px-3 py-1 rounded-full border border-gray-700 font-mono"></span>
                 <button onclick="openKycModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition">
-                    KYC
+                    KYC Verification
                 </button>
                 <button onclick="handleLogout()" class="bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600 hover:text-white font-semibold text-xs px-2.5 py-1.5 rounded-lg transition">
                     <i class="fa-solid fa-right-from-bracket"></i>
@@ -171,13 +171,15 @@
         </div>
     </div>
 
-    <!-- KYC MODAL -->
+    <!-- BINANCE KYC MODAL WITH LIVE CAMERA SELFIE -->
     <div id="kycModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brandCard border border-brandBorder w-full max-w-lg rounded-2xl p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeKycModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
 
             <h2 class="text-xl font-bold text-white mb-1">Identity Verification (KYC)</h2>
-            <p class="text-xs text-gray-400 mb-4">Fill in details and upload valid identity documents.</p>
+            <p class="text-xs text-gray-400 mb-4">Fill in details and upload valid identity documents + Live Selfie.</p>
+
+            <div id="kycAlertMsg" class="hidden p-3 mb-4 text-xs rounded-lg"></div>
 
             <form onsubmit="handleKycSubmit(event)" class="space-y-3.5">
                 <div class="grid grid-cols-2 gap-3">
@@ -211,18 +213,42 @@
                     </div>
                 </div>
 
+                <!-- 1. ID Front Upload -->
                 <div>
                     <label class="block text-xs font-semibold text-gray-300 mb-1">1. Upload ID Front Photo</label>
                     <input type="file" id="kIdImg" accept="image/*" required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2 text-xs text-gray-300">
                 </div>
 
+                <!-- 2. Live Camera Selfie Option -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">2. Upload Live Selfie Photo</label>
-                    <input type="file" id="kSelfieImg" accept="image/*" required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2 text-xs text-gray-300">
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">2. Live Selfie Verification</label>
+                    <div class="space-y-2">
+                        <button type="button" onclick="startCamera()" class="w-full bg-brandAccent hover:bg-gray-700 text-sky-400 font-semibold py-2 rounded-lg text-xs border border-gray-700 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Open Camera & Take Live Selfie</span>
+                        </button>
+
+                        <div id="cameraPreviewContainer" class="hidden flex flex-col items-center space-y-2">
+                            <video id="webcam" autoplay playsinline class="w-full h-48 bg-black rounded-lg border border-sky-500 object-cover"></video>
+                            <button type="button" onclick="captureSelfie()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs">
+                                📸 Capture Photo
+                            </button>
+                        </div>
+
+                        <canvas id="canvas" class="hidden"></canvas>
+
+                        <div id="selfiePreview" class="hidden flex flex-col items-center">
+                            <span class="text-[10px] text-emerald-400 font-semibold mb-1">Live Selfie Captured ✓</span>
+                            <img id="selfieImgPreview" class="w-32 h-32 object-cover rounded-full border-2 border-emerald-500">
+                        </div>
+
+                        <p class="text-[10px] text-gray-400 text-center">Or upload selfie photo from file:</p>
+                        <input type="file" id="kSelfieFile" accept="image/*" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2 text-xs text-gray-300">
+                    </div>
                 </div>
 
-                <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-lg transition">
-                    Submit Identity Verification
+                <button type="submit" id="btnSubmitKyc" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center space-x-2">
+                    <span id="kycBtnText">Submit Identity Verification</span>
                 </button>
             </form>
         </div>
@@ -275,6 +301,8 @@
     <script>
         let currentUser = localStorage.getItem('gadaaUser');
         let currentKycStatus = 'UNVERIFIED';
+        let capturedSelfieBase64 = '';
+        let mediaStream = null;
         const SUPER_ADMIN_EMAIL = 'gemechureta387@gmail.com';
 
         async function checkAuthView() {
@@ -285,7 +313,6 @@
                 document.getElementById('loggedInNav').classList.remove('hidden');
                 document.getElementById('userBadge').innerText = currentUser;
 
-                // Show Secret Admin Button ONLY for gemechureta387@gmail.com
                 if (currentUser.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
                     document.getElementById('adminPortalBtn').classList.remove('hidden');
                 } else {
@@ -315,6 +342,37 @@
                 document.getElementById('superAdminDashboard').classList.add('hidden');
                 document.getElementById('loggedOutNav').classList.remove('hidden');
                 document.getElementById('loggedInNav').classList.add('hidden');
+            }
+        }
+
+        // Live Camera Handlers
+        async function startCamera() {
+            try {
+                const video = document.getElementById('webcam');
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+                video.srcObject = mediaStream;
+                document.getElementById('cameraPreviewContainer').classList.remove('hidden');
+            } catch (err) {
+                alert("Camera access denied or unavailable: " + err.message);
+            }
+        }
+
+        function captureSelfie() {
+            const video = document.getElementById('webcam');
+            const canvas = document.getElementById('canvas');
+            canvas.width = video.videoWidth || 320;
+            canvas.height = video.videoHeight || 240;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            capturedSelfieBase64 = canvas.toDataURL('image/jpeg');
+
+            document.getElementById('selfieImgPreview').src = capturedSelfieBase64;
+            document.getElementById('selfiePreview').classList.remove('hidden');
+            document.getElementById('cameraPreviewContainer').classList.add('hidden');
+
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
             }
         }
 
@@ -411,7 +469,10 @@
 
         function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
         function openKycModal() { document.getElementById('kycModal').classList.remove('hidden'); }
-        function closeKycModal() { document.getElementById('kycModal').classList.add('hidden'); }
+        function closeKycModal() { 
+            document.getElementById('kycModal').classList.add('hidden'); 
+            if (mediaStream) { mediaStream.getTracks().forEach(track => track.stop()); }
+        }
         function openCreateOrderModal() { 
             if (currentKycStatus !== 'VERIFIED') {
                 alert('KYC Required: Your ID and Live Selfie must be approved by Super Admin before posting orders!');
@@ -475,6 +536,7 @@
         }
 
         const fileToBase64 = file => new Promise((resolve, reject) => {
+            if (!file) return resolve('');
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => resolve(reader.result);
@@ -483,29 +545,64 @@
 
         async function handleKycSubmit(e) {
             e.preventDefault();
-            const country = document.getElementById('kCountry').value;
-            const city = document.getElementById('kCity').value;
-            const fullName = document.getElementById('kName').value;
-            const idType = document.getElementById('kType').value;
-            const idNumber = document.getElementById('kNum').value;
-            const idFile = document.getElementById('kIdImg').files[0];
-            const selfieFile = document.getElementById('kSelfieImg').files[0];
+            
+            const btn = document.getElementById('btnSubmitKyc');
+            const btnText = document.getElementById('kycBtnText');
+            const alertMsg = document.getElementById('kycAlertMsg');
 
-            const idFrontImg = await fileToBase64(idFile);
-            const selfieImg = await fileToBase64(selfieFile);
+            alertMsg.classList.add('hidden');
+            btn.disabled = true;
+            btnText.innerText = "Processing Selfie & ID...";
 
-            const res = await fetch('/api/kyc/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userEmail: currentUser, country, city, fullName, idType, idNumber, idFrontImg, selfieImg })
-            });
+            try {
+                const country = document.getElementById('kCountry').value;
+                const city = document.getElementById('kCity').value;
+                const fullName = document.getElementById('kName').value;
+                const idType = document.getElementById('kType').value;
+                const idNumber = document.getElementById('kNum').value;
+                const idFile = document.getElementById('kIdImg').files[0];
+                const selfieFile = document.getElementById('kSelfieFile').files[0];
 
-            const data = await res.json();
-            alert(data.message);
+                let finalSelfieBase64 = capturedSelfieBase64;
+                if (!finalSelfieBase64 && selfieFile) {
+                    finalSelfieBase64 = await fileToBase64(selfieFile);
+                }
 
-            if (data.success) {
-                closeKycModal();
-                checkAuthView();
+                const idFrontImg = await fileToBase64(idFile);
+
+                if (!idFrontImg || !finalSelfieBase64) {
+                    alert('Please provide both ID Front Photo and Live Selfie!');
+                    btn.disabled = false;
+                    btnText.innerText = "Submit Identity Verification";
+                    return;
+                }
+
+                btnText.innerText = "Submitting to Server...";
+
+                const res = await fetch('/api/kyc/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userEmail: currentUser, country, city, fullName, idType, idNumber, idFrontImg, selfieImg: finalSelfieBase64 })
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    alertMsg.className = "p-3 mb-4 text-xs rounded-lg bg-red-900/50 text-red-300 border border-red-500/30";
+                    alertMsg.innerText = data.message;
+                    alertMsg.classList.remove('hidden');
+                } else {
+                    alert('Identity Verification Submitted Successfully! Pending Super Admin Approval.');
+                    closeKycModal();
+                    checkAuthView();
+                }
+            } catch (err) {
+                alertMsg.className = "p-3 mb-4 text-xs rounded-lg bg-red-900/50 text-red-300 border border-red-500/30";
+                alertMsg.innerText = "Error: " + err.message;
+                alertMsg.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = "Submit Identity Verification";
             }
         }
 
