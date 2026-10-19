@@ -61,21 +61,27 @@
         </div>
     </header>
 
-    <!-- LANDING PAGE -->
+    <!-- BINANCE STYLE LANDING PAGE (FAST & SECURE) -->
     <section id="landingPage" class="max-w-4xl mx-auto px-4 text-center my-auto py-12 md:py-20 space-y-6">
+        <div class="inline-flex items-center space-x-2 bg-brandAccent border border-brandBorder px-3.5 py-1.5 rounded-full text-xs text-gray-300 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="font-semibold text-brandGold">Fast, Secure & Trusted P2P Trading</span>
+        </div>
+
         <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white leading-tight">
-            Crypto P2P Market for <span class="text-brandGold">Android & Web</span>
+            The World’s Leading <span class="text-brandGold">Crypto P2P Exchange</span>
         </h1>
+        
         <p class="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
-            Trade USDT instantly with 0% fee. Please start our official Telegram Bot **@gadaap2p_bot** to verify your email address.
+            Trade USDT and cryptocurrencies with 0% fee securely using local payment methods. Please start our official Telegram Bot <strong class="text-white">@gadaap2p_bot</strong> to verify your account.
         </p>
         
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-3 pt-2">
-            <a href="https://t.me/gadaap2p_bot?start=register" target="_blank" class="w-full sm:w-auto bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg">
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-3 pt-4">
+            <a href="https://t.me/gadaap2p_bot?start=register" target="_blank" class="w-full sm:w-auto bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-3.5 rounded-xl flex items-center justify-center space-x-2 shadow-lg transition">
                 <i class="fa-brands fa-telegram text-xl"></i>
                 <span>Start @gadaap2p_bot</span>
             </a>
-            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-brandGold hover:bg-yellow-400 text-black font-bold px-8 py-3.5 rounded-xl shadow-lg">
+            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-brandGold hover:bg-yellow-400 text-black font-bold px-8 py-3.5 rounded-xl shadow-lg transition">
                 Register on Web
             </button>
         </div>
@@ -171,7 +177,7 @@
         </div>
     </div>
 
-    <!-- KYC MODAL WITH MANDATORY SELFIE FIELD -->
+    <!-- KYC MODAL -->
     <div id="kycModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brandCard border border-brandBorder w-full max-w-lg rounded-2xl p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeKycModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
