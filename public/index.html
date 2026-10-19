@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GadaaP2P | Crypto P2P Exchange</title>
+    <title>GadaaP2P | World's Leading Crypto P2P Exchange</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -61,7 +61,7 @@
         </div>
     </header>
 
-    <!-- BINANCE STYLE LANDING PAGE (FAST & SECURE) -->
+    <!-- BINANCE STYLE LANDING PAGE (HERO) -->
     <section id="landingPage" class="max-w-4xl mx-auto px-4 text-center my-auto py-12 md:py-20 space-y-6">
         <div class="inline-flex items-center space-x-2 bg-brandAccent border border-brandBorder px-3.5 py-1.5 rounded-full text-xs text-gray-300 shadow-sm">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -87,37 +87,47 @@
         </div>
     </section>
 
-    <!-- USER DASHBOARD -->
+    <!-- BINANCE GRADE USER DASHBOARD -->
     <main id="protectedDashboard" class="hidden max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
+        <!-- P2P Navigation Header -->
         <div class="bg-brandCard border border-brandBorder rounded-xl p-4 sm:p-6 shadow-xl">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-brandBorder">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-brandBorder">
                 <div>
-                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-right-left text-brandGold"></i>
-                        <span>P2P Express Market</span>
-                    </h2>
-                    <p class="text-xs text-gray-400 mt-0.5">Verified P2P Orderbook (Minimum rate 190 ETB/USDT)</p>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-emerald-400 font-extrabold text-xl">Buy</span>
+                        <span class="text-gray-500 text-xl">/</span>
+                        <span class="text-red-400 font-extrabold text-xl">Sell</span>
+                        <span class="bg-amber-500/10 text-brandGold text-xs font-bold px-2.5 py-1 rounded border border-amber-500/20">USDT</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Peer-to-Peer Express Orderbook (Strictly Verified Merchants Only)</p>
                 </div>
-                <button onclick="openCreateOrderModal()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs sm:text-sm transition">
-                    + Post New Ad / Order
-                </button>
+
+                <div class="flex items-center space-x-3 w-full sm:w-auto">
+                    <button onclick="openCreateOrderModal()" class="w-full sm:w-auto bg-brandGold hover:bg-yellow-400 text-black font-bold px-5 py-2.5 rounded-lg text-xs sm:text-sm transition shadow-md flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Post Trade Offer</span>
+                    </button>
+                </div>
             </div>
 
+            <!-- Orders Table (Desktop) -->
             <div class="mt-4">
                 <div class="hidden md:block overflow-x-auto">
                     <table class="w-full text-left text-sm text-gray-300">
                         <thead class="bg-brandDark text-gray-400 text-xs uppercase border-b border-brandBorder">
                             <tr>
-                                <th class="py-3 px-4">Merchant</th>
-                                <th class="py-3 px-4">Price</th>
-                                <th class="py-3 px-4">Limit / Available</th>
-                                <th class="py-3 px-4">Payment Methods</th>
+                                <th class="py-3 px-4">Merchant Name</th>
+                                <th class="py-3 px-4">Price Rate</th>
+                                <th class="py-3 px-4">Available / Limit</th>
+                                <th class="py-3 px-4">Payment Method</th>
                                 <th class="py-3 px-4 text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody id="ordersTableBody" class="divide-y divide-brandBorder"></tbody>
                     </table>
                 </div>
+
+                <!-- Orders Container (Mobile) -->
                 <div id="mobileOrdersContainer" class="md:hidden space-y-3"></div>
             </div>
         </div>
@@ -177,13 +187,13 @@
         </div>
     </div>
 
-    <!-- KYC MODAL -->
+    <!-- STRICT KYC MODAL (FRONT, BACK, SELFIE) -->
     <div id="kycModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brandCard border border-brandBorder w-full max-w-lg rounded-2xl p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeKycModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
 
-            <h2 class="text-xl font-bold text-white mb-1">Identity Verification (KYC)</h2>
-            <p class="text-xs text-gray-400 mb-4">Fill in details and upload both ID and Live Selfie.</p>
+            <h2 class="text-xl font-bold text-white mb-1">Strict Identity Verification (KYC)</h2>
+            <p class="text-xs text-gray-400 mb-4">Upload genuine ID (Front & Back) and clear Live Selfie to trade.</p>
 
             <div id="kycAlertMsg" class="hidden p-3 mb-4 text-xs rounded-lg font-medium"></div>
 
@@ -219,20 +229,23 @@
                     </div>
                 </div>
 
-                <!-- ID Photo Input -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1">1. Upload ID Front Photo</label>
-                    <input type="file" id="kIdImg" accept="image/*" required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2 text-xs text-gray-300">
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">1. ID Front Photo (Required)</label>
+                    <input type="file" id="kIdFrontImg" accept="image/*" required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2 text-xs text-gray-300">
                 </div>
 
-                <!-- Mandatory Selfie Photo Input -->
                 <div>
-                    <label class="block text-xs font-semibold text-sky-400 mb-1">2. Upload Live Selfie Photo (Required)</label>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">2. ID Back Photo (Required)</label>
+                    <input type="file" id="kIdBackImg" accept="image/*" required class="w-full bg-brandDark border border-gray-700 rounded-lg p-2 text-xs text-gray-300">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-sky-400 mb-1">3. Live Selfie Photo (Clear & Bright, Required)</label>
                     <input type="file" id="kSelfieImg" accept="image/*" required class="w-full bg-brandDark border border-sky-500/50 rounded-lg p-2 text-xs text-gray-300">
                 </div>
 
                 <button type="submit" id="btnSubmitKyc" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center space-x-2">
-                    <span id="kycBtnText">Submit Identity Verification</span>
+                    <span id="kycBtnText">Submit Strict Identity Verification</span>
                 </button>
             </form>
         </div>
@@ -243,7 +256,7 @@
         <div class="bg-brandCard border border-brandBorder w-full max-w-md rounded-2xl p-5 sm:p-6 shadow-2xl relative">
             <button onclick="closeCreateOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
 
-            <h2 class="text-xl font-bold text-white mb-4">Post Real Trade Order</h2>
+            <h2 class="text-xl font-bold text-white mb-4">Post Real Trade Offer</h2>
 
             <form onsubmit="handleCreateOrder(event)" class="space-y-3.5">
                 <div class="grid grid-cols-2 gap-3">
@@ -267,11 +280,11 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-gray-300 mb-1">Payment Methods</label>
-                    <input type="text" id="oPayment" required placeholder="Telebirr, CBE" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
+                    <input type="text" id="oPayment" required placeholder="Telebirr, CBE, Commercial Bank" class="w-full bg-brandDark border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-brandGold">
                 </div>
 
                 <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-lg transition">
-                    Publish Live Order
+                    Publish Live Offer
                 </button>
             </form>
         </div>
@@ -356,34 +369,40 @@
             if (data.success && data.pendingKyc.length > 0) {
                 data.pendingKyc.forEach(k => {
                     list.innerHTML += `
-                        <div class="bg-brandDark border border-gray-700 rounded-xl p-4 sm:p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-brandDark border border-gray-700 rounded-xl p-4 sm:p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <h3 class="font-bold text-white text-base">${k.fullName}</h3>
                                 <p class="text-xs text-sky-400 font-mono">${k.userEmail}</p>
                                 <p class="text-xs text-gray-400 mt-1">Location: ${k.city}, ${k.country}</p>
                                 <p class="text-xs text-gray-400">${k.idType}: <span class="text-white font-bold">${k.idNumber}</span></p>
 
-                                <div class="mt-4 flex space-x-3">
-                                    <button onclick="processKycDecision('${k.userEmail}', 'APPROVE')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-xs">
-                                        Approve & Verify User
+                                <div class="mt-4 flex space-x-2">
+                                    <button onclick="processKycDecision('${k.userEmail}', 'APPROVE')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs">
+                                        Approve
                                     </button>
-                                    <button onclick="processKycDecision('${k.userEmail}', 'REJECT')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-lg text-xs">
+                                    <button onclick="processKycDecision('${k.userEmail}', 'REJECT')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs">
                                         Reject
                                     </button>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-2">
+                            <div class="col-span-2 grid grid-cols-3 gap-2">
                                 <div>
-                                    <span class="text-[10px] text-gray-400 block mb-1">Uploaded ID Card</span>
+                                    <span class="text-[10px] text-gray-400 block mb-1">ID Front</span>
                                     <a href="${k.idFrontImg}" target="_blank">
-                                        <img src="${k.idFrontImg}" class="w-full h-32 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition">
+                                        <img src="${k.idFrontImg}" class="w-full h-28 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition">
                                     </a>
                                 </div>
                                 <div>
-                                    <span class="text-[10px] text-gray-400 block mb-1">Live Selfie Photo</span>
+                                    <span class="text-[10px] text-gray-400 block mb-1">ID Back</span>
+                                    <a href="${k.idBackImg}" target="_blank">
+                                        <img src="${k.idBackImg}" class="w-full h-28 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition">
+                                    </a>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-gray-400 block mb-1">Live Selfie</span>
                                     <a href="${k.selfieImg}" target="_blank">
-                                        <img src="${k.selfieImg}" class="w-full h-32 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition">
+                                        <img src="${k.selfieImg}" class="w-full h-28 object-cover rounded-lg border border-gray-700 hover:opacity-80 transition">
                                     </a>
                                 </div>
                             </div>
@@ -426,7 +445,7 @@
         function closeKycModal() { document.getElementById('kycModal').classList.add('hidden'); }
         function openCreateOrderModal() { 
             if (currentKycStatus !== 'VERIFIED') {
-                alert('KYC Required: Your ID and Live Selfie must be approved by Super Admin before posting orders!');
+                alert('KYC Required: Your ID Front, ID Back, and Live Selfie must be fully approved by Super Admin before posting offers!');
                 openKycModal();
                 return;
             }
@@ -503,7 +522,7 @@
 
             alertMsg.classList.add('hidden');
             btn.disabled = true;
-            btnText.innerText = "Converting Images...";
+            btnText.innerText = "Processing 3 Documents...";
 
             try {
                 const country = document.getElementById('kCountry').value;
@@ -511,25 +530,24 @@
                 const fullName = document.getElementById('kName').value;
                 const idType = document.getElementById('kType').value;
                 const idNumber = document.getElementById('kNum').value;
-                const idFileInput = document.getElementById('kIdImg').files[0];
-                const selfieFileInput = document.getElementById('kSelfieImg').files[0];
+                
+                const idFrontInput = document.getElementById('kIdFrontImg').files[0];
+                const idBackInput = document.getElementById('kIdBackImg').files[0];
+                const selfieInput = document.getElementById('kSelfieImg').files[0];
 
-                if (!idFileInput) {
-                    throw new Error("Please select your ID Front Photo.");
+                if (!idFrontInput || !idBackInput || !selfieInput) {
+                    throw new Error("All three documents (ID Front, ID Back, and Live Selfie) are strictly required.");
                 }
 
-                if (!selfieFileInput) {
-                    throw new Error("Please select your Live Selfie Photo.");
+                const idFrontImg = await fileToBase64(idFrontInput);
+                const idBackImg = await fileToBase64(idBackInput);
+                const selfieImg = await fileToBase64(selfieInput);
+
+                if (!idFrontImg || !idBackImg || !selfieImg) {
+                    throw new Error("Failed to process document files. Please upload clear images.");
                 }
 
-                const idFrontImg = await fileToBase64(idFileInput);
-                const selfieImg = await fileToBase64(selfieFileInput);
-
-                if (!idFrontImg || !selfieImg) {
-                    throw new Error("Failed to process image files. Please try uploading again.");
-                }
-
-                btnText.innerText = "Submitting to Server...";
+                btnText.innerText = "Submitting to Super Admin...";
 
                 const res = await fetch('/api/kyc/submit', {
                     method: 'POST',
@@ -542,6 +560,7 @@
                         idType, 
                         idNumber, 
                         idFrontImg, 
+                        idBackImg, 
                         selfieImg 
                     })
                 });
@@ -553,7 +572,7 @@
                     alertMsg.innerText = data.message;
                     alertMsg.classList.remove('hidden');
                 } else {
-                    alert('Identity Verification Submitted Successfully! Pending Super Admin Approval.');
+                    alert('KYC submitted successfully! Pending strict review by Super Admin.');
                     closeKycModal();
                     checkAuthView();
                 }
@@ -563,7 +582,7 @@
                 alertMsg.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
-                btnText.innerText = "Submit Identity Verification";
+                btnText.innerText = "Submit Strict Identity Verification";
             }
         }
 
@@ -584,43 +603,62 @@
 
             if (data.success && data.orders.length > 0) {
                 data.orders.forEach(ord => {
+                    const isSell = ord.type === 'SELL';
+                    const actionBtnClass = isSell ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-red-600 hover:bg-red-500';
+                    const actionBtnText = isSell ? 'Buy USDT' : 'Sell USDT';
+
                     tbody.innerHTML += `
-                        <tr class="hover:bg-brandAccent/50 transition">
-                            <td class="py-4 px-4 font-bold text-white">${ord.merchantName} (${ord.merchantEmail})</td>
-                            <td class="py-4 px-4 font-bold text-lg text-emerald-400">${ord.price} ETB</td>
-                            <td class="py-4 px-4 text-xs">${ord.availableAmount} USDT</td>
-                            <td class="py-4 px-4"><span class="bg-amber-500/10 text-amber-400 text-xs px-2 py-1 rounded border border-amber-500/20">${ord.paymentMethod}</span></td>
+                        <tr class="hover:bg-brandAccent/50 transition border-b border-brandBorder/50">
+                            <td class="py-4 px-4 font-bold text-white flex items-center space-x-2">
+                                <div class="w-7 h-7 bg-brandGold text-black font-extrabold rounded-full flex items-center justify-center text-xs">
+                                    ${ord.merchantName.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold">${ord.merchantName}</div>
+                                    <div class="text-[10px] text-emerald-400">Verified Merchant ✓</div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 font-black text-lg text-emerald-400">${ord.price} <span class="text-xs text-gray-400 font-normal">ETB</span></td>
+                            <td class="py-4 px-4 text-xs font-semibold text-gray-200">${ord.availableAmount} USDT</td>
+                            <td class="py-4 px-4"><span class="bg-amber-500/10 text-brandGold text-xs px-2.5 py-1 rounded border border-amber-500/20 font-semibold">${ord.paymentMethod}</span></td>
                             <td class="py-4 px-4 text-right">
-                                <button class="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs">Trade</button>
+                                <button onclick="alert('Contact merchant to trade')" class="${actionBtnClass} text-white font-bold px-5 py-2 rounded-lg text-xs shadow">
+                                    ${actionBtnText}
+                                </button>
                             </td>
                         </tr>
                     `;
 
                     mobileContainer.innerHTML += `
-                        <div class="bg-brandDark border border-brandBorder p-3.5 rounded-xl space-y-2">
+                        <div class="bg-brandDark border border-brandBorder p-4 rounded-xl space-y-3">
                             <div class="flex justify-between items-center">
-                                <span class="font-bold text-white text-xs">${ord.merchantName}</span>
-                                <span class="bg-amber-500/10 text-amber-400 text-[10px] px-2 py-0.5 rounded border border-amber-500/20">${ord.paymentMethod}</span>
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-6 h-6 bg-brandGold text-black font-extrabold rounded-full flex items-center justify-center text-[10px]">
+                                        ${ord.merchantName.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span class="font-bold text-white text-xs">${ord.merchantName}</span>
+                                </div>
+                                <span class="bg-amber-500/10 text-brandGold text-[10px] px-2 py-0.5 rounded border border-amber-500/20">${ord.paymentMethod}</span>
                             </div>
                             <div class="flex justify-between items-end pt-1">
                                 <div>
-                                    <span class="text-[10px] text-gray-400 block">Price Rate</span>
+                                    <span class="text-[10px] text-gray-400 block">Price</span>
                                     <span class="text-base font-black text-emerald-400">${ord.price} ETB</span>
                                 </div>
                                 <div>
                                     <span class="text-[10px] text-gray-400 block">Available</span>
                                     <span class="text-xs font-semibold text-gray-200">${ord.availableAmount} USDT</span>
                                 </div>
-                                <button class="bg-green-600 hover:bg-green-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs">
-                                    Trade
+                                <button onclick="alert('Contact merchant to trade')" class="${actionBtnClass} text-white font-bold px-4 py-1.5 rounded-lg text-xs">
+                                    ${actionBtnText}
                                 </button>
                             </div>
                         </div>
                     `;
                 });
             } else {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-gray-500">No active real orders available. Complete KYC and post the first ad!</td></tr>`;
-                mobileContainer.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs">No active real orders available. Post the first ad!</div>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500 text-xs">No active verified orders. Pass strict KYC and post the first trade offer!</td></tr>`;
+                mobileContainer.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs">No active verified orders. Pass strict KYC and post the first trade offer!</div>`;
             }
         }
 
@@ -641,7 +679,7 @@
             if (!data.success) {
                 alert(data.message);
             } else {
-                alert('Real Order Published Live!');
+                alert('Trade Offer Published Live!');
                 closeCreateOrderModal();
                 fetchLiveOrders();
             }
