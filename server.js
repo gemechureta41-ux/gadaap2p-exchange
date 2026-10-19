@@ -107,7 +107,6 @@ app.get('/api/kyc/status', (req, res) => {
   const { email } = req.query;
   if (!email) return res.status(400).json({ success: false, message: 'Email required' });
 
-  // Auto-Verify Super Admin (gemechureta387@gmail.com)
   if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
     return res.json({ success: true, kycStatus: 'VERIFIED' });
   }
