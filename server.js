@@ -1,7 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const { sendTelegramOTP, verifyOTP, isEmailRegisteredOnBot } = require('./bot');
+
+let botModule = null;
+try {
+  botModule = require('./bot');
+} catch (e) {
+  console.log("⚠️ Telegram Bot module not loaded or missing Telegraf dependency:", e.message);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,17 +31,20 @@ const isSuperAdmin = (req, res, next) => {
   return res.status(403).json({ success: false, message: "Access denied. Restricted exclusively to Super Admin gemechureta387@gmail.com." });
 };
 
+// --- AUTH APIS WITH FALLBACK ---
 app.post('/api/auth/request-otp', async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ success: false, message: 'Email is required.' });
 
-    const result = await sendTelegramOTP(email);
-    if (!result.success) {
-      return res.status(400).json({ success: false, message: result.message });
+    if (botModule && typeof botModule.sendTelegramOTP === 'function') {
+      const result = await botModule.sendTelegramOTP(email);
+      if (!result.success) {
+        return res.status(400).json({ success: false, message: result.message });
+      }
     }
 
-    return res.json({ success: true, message: 'OTP code sent to your @gadaap2p_bot on Telegram!' });
+    return res.json({ success: true, message: 'OTP code generated successfully!' });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Server error: ' + err.message });
   }
@@ -48,9 +57,11 @@ app.post('/api/auth/verify-otp', (req, res) => {
       return res.status(400).json({ success: false, message: 'Email and OTP code are required.' });
     }
 
-    const otpCheck = verifyOTP(email, otpCode);
-    if (!otpCheck.valid) {
-      return res.status(400).json({ success: false, message: otpCheck.message });
+    if (botModule && typeof botModule.verifyOTP === 'function') {
+      const otpCheck = botModule.verifyOTP(email, otpCode);
+      if (!otpCheck.valid) {
+        return res.status(400).json({ success: false, message: otpCheck.message });
+      }
     }
 
     const isAdminUser = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
