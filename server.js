@@ -19,7 +19,7 @@ const ADMIN_EMAIL = "gemechureta387@gmail.com";
 
 const isSuperAdmin = (req, res, next) => {
   const { adminKey, userEmail } = req.headers;
-  if ((adminKey === process.env.ADMIN_SECRET_KEY || adminKey === "GadaaFounder2026") && userEmail === ADMIN_EMAIL) {
+  if ((adminKey === process.env.ADMIN_SECRET_KEY || adminKey === "GadaaFounder2026") && userEmail && userEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
     return next();
   }
   return res.status(403).json({ success: false, message: "Access denied. Restricted exclusively to Super Admin gemechureta387@gmail.com." });
@@ -62,22 +62,21 @@ app.post('/api/auth/verify-otp', (req, res) => {
 
 app.post('/api/kyc/submit', (req, res) => {
   try {
-    const { userEmail, country, city, fullName, idType, idNumber, idFrontImg, selfieImg } = req.body;
+    const { userEmail, country, city, fullName, idType, idNumber, idFrontImg, idBackImg, selfieImg } = req.body;
 
     if (!userEmail) {
       return res.status(400).json({ success: false, message: 'User session invalid. Please log in again.' });
     }
 
     if (!country || !city || !fullName || !idNumber) {
-      return res.status(400).json({ success: false, message: 'Please fill in all personal and ID details.' });
+      return res.status(400).json({ success: false, message: 'Please fill in all required personal and document details.' });
     }
 
-    if (!idFrontImg) {
-      return res.status(400).json({ success: false, message: 'ID Front photo is missing.' });
-    }
-
-    if (!selfieImg) {
-      return res.status(400).json({ success: false, message: 'Live Selfie photo is required. Please upload your selfie.' });
+    if (!idFrontImg || !idBackImg || !selfieImg) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Strict KYC Required: You must upload ID Front, ID Back, and a clear Live Selfie photo!' 
+      });
     }
 
     kycRequests.set(userEmail.toLowerCase(), {
@@ -88,6 +87,7 @@ app.post('/api/kyc/submit', (req, res) => {
       idType,
       idNumber,
       idFrontImg,
+      idBackImg,
       selfieImg,
       status: 'PENDING_ADMIN',
       submittedAt: new Date()
@@ -95,17 +95,22 @@ app.post('/api/kyc/submit', (req, res) => {
 
     return res.json({ 
       success: true, 
-      message: 'Identity Verification submitted successfully! Pending review by Super Admin.',
+      message: 'KYC documents submitted successfully! Under strict review by Super Admin.',
       kycStatus: 'PENDING_ADMIN'
     });
   } catch (err) {
-    return res.status(500).json({ success: false, message: 'Failed to process KYC data: ' + err.message });
+    return res.status(500).json({ success: false, message: 'Failed to process KYC submission: ' + err.message });
   }
 });
 
 app.get('/api/kyc/status', (req, res) => {
   const { email } = req.query;
   if (!email) return res.status(400).json({ success: false, message: 'Email required' });
+
+  // Auto-Verify Super Admin (gemechureta387@gmail.com)
+  if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    return res.json({ success: true, kycStatus: 'VERIFIED' });
+  }
 
   const kyc = kycRequests.get(email.toLowerCase());
   if (!kyc) return res.json({ success: true, kycStatus: 'UNVERIFIED' });
@@ -131,7 +136,7 @@ app.post('/api/admin/verify-kyc-action', isSuperAdmin, (req, res) => {
     return res.json({ success: true, message: `KYC for ${targetEmail} approved successfully!` });
   } else if (action === 'REJECT') {
     kyc.status = 'REJECTED';
-    return res.json({ success: true, message: `KYC for ${targetEmail} rejected!` });
+    return res.json({ success: true, message: `KYC for ${targetEmail} rejected due to invalid documents!` });
   }
 
   return res.status(400).json({ success: false, message: 'Invalid action.' });
@@ -142,11 +147,13 @@ app.get('/api/p2p/orders', (req, res) => res.json({ success: true, orders: p2pOr
 app.post('/api/p2p/create-order', (req, res) => {
   const { merchantEmail, type, price, amount, paymentMethod } = req.body;
 
+  const isSuperAdminUser = (merchantEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase());
   const kyc = kycRequests.get(merchantEmail.toLowerCase());
-  if (!kyc || kyc.status !== 'VERIFIED') {
+
+  if (!isSuperAdminUser && (!kyc || kyc.status !== 'VERIFIED')) {
     return res.status(403).json({ 
       success: false, 
-      message: 'KYC Verification Required: Your ID and Live Selfie must be approved by Super Admin before posting orders!' 
+      message: 'Access Denied: You must complete and pass full KYC (ID Front, ID Back & Selfie) verified by Super Admin before you can Buy, Sell, or Post orders!' 
     });
   }
 
@@ -155,10 +162,12 @@ app.post('/api/p2p/create-order', (req, res) => {
     return res.status(400).json({ success: false, message: 'Minimum price rate starts from 190 ETB per 1 USDT.' });
   }
 
+  const merchantName = isSuperAdminUser ? "Gadaa Owner (Super Admin)" : kyc.fullName;
+
   const newOrder = {
     id: 'ORD-' + Date.now(),
     merchantEmail,
-    merchantName: kyc.fullName,
+    merchantName,
     type,
     price: numericPrice,
     amount: parseFloat(amount),
