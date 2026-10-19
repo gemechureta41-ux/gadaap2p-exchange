@@ -51,7 +51,7 @@
                 </button>
                 <span id="kycBadge" class="text-[10px] md:text-xs px-2.5 py-1 rounded-full font-bold"></span>
                 <span id="userBadge" class="hidden sm:inline-block text-xs bg-brandAccent text-gray-300 px-3 py-1 rounded-full border border-gray-700 font-mono"></span>
-                <button onclick="openKycModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition">
+                <button id="btnKycModal" onclick="openKycModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs px-3 py-1.5 rounded-lg transition">
                     KYC Verification
                 </button>
                 <button onclick="handleLogout()" class="bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600 hover:text-white font-semibold text-xs px-2.5 py-1.5 rounded-lg transition">
@@ -61,7 +61,7 @@
         </div>
     </header>
 
-    <!-- BINANCE STYLE LANDING PAGE (HERO) -->
+    <!-- BINANCE STYLE LANDING PAGE -->
     <section id="landingPage" class="max-w-4xl mx-auto px-4 text-center my-auto py-12 md:py-20 space-y-6">
         <div class="inline-flex items-center space-x-2 bg-brandAccent border border-brandBorder px-3.5 py-1.5 rounded-full text-xs text-gray-300 shadow-sm">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -89,7 +89,6 @@
 
     <!-- BINANCE GRADE USER DASHBOARD -->
     <main id="protectedDashboard" class="hidden max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
-        <!-- P2P Navigation Header -->
         <div class="bg-brandCard border border-brandBorder rounded-xl p-4 sm:p-6 shadow-xl">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-brandBorder">
                 <div>
@@ -110,7 +109,6 @@
                 </div>
             </div>
 
-            <!-- Orders Table (Desktop) -->
             <div class="mt-4">
                 <div class="hidden md:block overflow-x-auto">
                     <table class="w-full text-left text-sm text-gray-300">
@@ -127,7 +125,6 @@
                     </table>
                 </div>
 
-                <!-- Orders Container (Mobile) -->
                 <div id="mobileOrdersContainer" class="md:hidden space-y-3"></div>
             </div>
         </div>
@@ -187,7 +184,7 @@
         </div>
     </div>
 
-    <!-- STRICT KYC MODAL (FRONT, BACK, SELFIE) -->
+    <!-- STRICT KYC MODAL -->
     <div id="kycModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-brandCard border border-brandBorder w-full max-w-lg rounded-2xl p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeKycModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -308,10 +305,14 @@
                 document.getElementById('loggedInNav').classList.remove('hidden');
                 document.getElementById('userBadge').innerText = currentUser;
 
-                if (currentUser.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
+                const isSuperAdminUser = (currentUser.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase());
+
+                if (isSuperAdminUser) {
                     document.getElementById('adminPortalBtn').classList.remove('hidden');
+                    document.getElementById('btnKycModal').classList.add('hidden');
                 } else {
                     document.getElementById('adminPortalBtn').classList.add('hidden');
+                    document.getElementById('btnKycModal').classList.remove('hidden');
                 }
 
                 const res = await fetch(`/api/kyc/status?email=${encodeURIComponent(currentUser)}`);
@@ -319,9 +320,9 @@
                 currentKycStatus = data.kycStatus;
 
                 const badge = document.getElementById('kycBadge');
-                if (currentKycStatus === 'VERIFIED') {
+                if (isSuperAdminUser || currentKycStatus === 'VERIFIED') {
                     badge.className = "text-[10px] md:text-xs bg-emerald-950 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/30 font-bold";
-                    badge.innerText = "Verified ✓";
+                    badge.innerText = isSuperAdminUser ? "Super Admin Verified ✓" : "Verified ✓";
                 } else if (currentKycStatus === 'PENDING_ADMIN') {
                     badge.className = "text-[10px] md:text-xs bg-sky-950 text-sky-400 px-2.5 py-1 rounded-full border border-sky-500/30 font-bold";
                     badge.innerText = "Reviewing ⏳";
@@ -444,7 +445,8 @@
         }
         function closeKycModal() { document.getElementById('kycModal').classList.add('hidden'); }
         function openCreateOrderModal() { 
-            if (currentKycStatus !== 'VERIFIED') {
+            const isSuperAdminUser = (currentUser && currentUser.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase());
+            if (!isSuperAdminUser && currentKycStatus !== 'VERIFIED') {
                 alert('KYC Required: Your ID Front, ID Back, and Live Selfie must be fully approved by Super Admin before posting offers!');
                 openKycModal();
                 return;
